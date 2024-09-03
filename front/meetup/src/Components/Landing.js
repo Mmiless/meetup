@@ -2,7 +2,7 @@ import Calender from "./Calender";
 
 const Landing = () => {
     return (
-        <div>
+        <div className="container">
             <Calender />
         </div>
             
