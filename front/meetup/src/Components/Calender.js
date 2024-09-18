@@ -11,7 +11,6 @@ function getEndDate(month, year){
 function fillMatrix(){
     const date = new Date();
     const endDate = getEndDate(date.getMonth() + 1, date.getYear());
-
     const nextYr = date.getMonth() === 12 ? date.getMonth() + 1 : date.getMonth();
     const nextEndDate = getEndDate((date.getMonth() % 12) + 1, nextYr);
 
@@ -19,6 +18,7 @@ function fillMatrix(){
     let nextMonthDayCount = 1;
     let extraDayCount = 1; // 
     const month = [];
+
     for(let r = 0; r < 5; r++){
         const week = [];
         for(let c = 0; c < 7; c++){
@@ -28,7 +28,6 @@ function fillMatrix(){
         }
         month.push(week);
     }
-
     return month;
 }
 
@@ -43,10 +42,16 @@ const Calender = () => {
     const handleDateClick = (rowIdx, colIdx) => {
         setSelectedDates(prevState => {
             const newState = prevState.map(row => row.slice());
-            newState[rowIdx][colIdx] = !newState[rowIdx][colIdx]; // invert button state
+            newState[rowIdx][colIdx] = !newState[rowIdx][colIdx];
             return newState;
         });
     }
+
+    const [selectedTimes, setSelectedTime] = useState(
+        Array.from({length: 2}, () => Array(24).fill(false))
+    );
+
+    const times = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
     return (
         <div className ="pageContainer"> 
@@ -71,13 +76,36 @@ const Calender = () => {
 
             <div className="timeContainer">
                 <div id="promptText">What times?</div>
+                <label for="start" >Earliest: </label>
+                <select id="start">
+                    {times.map((hour) => (
+                        <option key={hour}>
+                            {hour}:00 AM
+                        </option>
+                    ))}
+                    {times.map((hour) => (
+                        <option key={hour}>
+                            {hour}:00 PM
+                        </option>
+                    ))}
+                </select>
+                <label for="end" >Latest: </label>
+                <select id="end">
+                    {times.map((hour) => (
+                        <option key={hour}>
+                            {hour}:00 AM
+                        </option>
+                    ))}
+                    {times.map((hour) => (
+                        <option key={hour}>
+                            {hour}:00 PM
+                        </option>
+                    ))}
+                </select>
                     
             </div>
 
         </div>
-        
-
-        
     );    
 };
 
