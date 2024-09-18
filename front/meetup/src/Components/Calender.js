@@ -51,61 +51,26 @@ const Calender = () => {
         Array.from({length: 2}, () => Array(24).fill(false))
     );
 
-    const times = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
     return (
-        <div className ="pageContainer"> 
 
-            <div className="calenderContainer">
-                <div id="promptText">What dates?</div>
-                    {matrix.map((row, rowIdx) => (
-                    <div className="calendarRow" key={rowIdx}>
-                        {row.map((cell, colIdx) => (
-                            <button className="calendarButton" key={colIdx}
-                                onClick={() => handleDateClick(rowIdx, colIdx)}
-                                style={{
-                                    backgroundColor: selectedDates[rowIdx][colIdx] ? "black" : "#ebeaed",
-                                    color: selectedDates[rowIdx][colIdx] ? "#ebeaed" : "black"
-                                }}>
-                                {cell}
-                            </button>
-                        ))}
-                </div>
-                ))}
+        <div className="calenderContainer">
+            <div id="promptText">What dates?</div>
+                {matrix.map((row, rowIdx) => (
+                <div className="calendarRow" key={rowIdx}>
+                    {row.map((cell, colIdx) => (
+                        <button className="calendarButton" key={colIdx}
+                            onClick={() => handleDateClick(rowIdx, colIdx)}
+                            style={{
+                                backgroundColor: selectedDates[rowIdx][colIdx] ? "black" : "#ebeaed",
+                                color: selectedDates[rowIdx][colIdx] ? "#ebeaed" : "black"
+                            }}>
+                            {cell}
+                        </button>
+                    ))}
             </div>
-
-            <div className="timeContainer">
-                <div id="promptText">What times?</div>
-                <label for="start" >Earliest: </label>
-                <select id="start">
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 AM
-                        </option>
-                    ))}
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 PM
-                        </option>
-                    ))}
-                </select>
-                <label for="end" >Latest: </label>
-                <select id="end">
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 AM
-                        </option>
-                    ))}
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 PM
-                        </option>
-                    ))}
-                </select>
-                    
-            </div>
-
+            ))}
         </div>
+
     );    
 };
 

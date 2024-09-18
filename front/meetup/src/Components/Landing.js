@@ -1,9 +1,13 @@
 import Calender from "./Calender";
+import Time from "./Time";
+
+import "./Landing.css"
 
 const Landing = () => {
     return (
-        <div className="container">
-            <Calender />
+        <div className="landingContainer">
+                <Calender />
+                <Time />
         </div>
             
     );
