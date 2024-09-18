@@ -1,36 +1,38 @@
+import React, {useState} from "react";
 import "./Time.css";
 
 const Time = () => {
 
-    const times = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    const times = Array.from({length: 24}, (_, i) => i);
+    const [startTimeIndex, setStartTimeIndex] = useState(0);
 
+    const handleStartChange = (e) =>{
+        const selection = parseInt(e.target.value);
+        setStartTimeIndex(selection);
+    }
+
+    const formatTime = (hour) => {
+        const period = hour < 12 ? "AM" : "PM";
+        const hourTwelve = hour % 12 === 0 ? 12 : hour % 12; 
+        return `${hourTwelve}:00 ${period}`;
+    };
 
     return(
         <div className="timeContainer">
                 <div id="promptText">What times?</div>
                 <label for="start" >Earliest: </label>
-                <select id="start">
+                <select id="start" onChange={handleStartChange}>
                     {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 AM
-                        </option>
-                    ))}
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 PM
+                        <option key={hour} value={hour}>
+                            {formatTime(hour)}
                         </option>
                     ))}
                 </select>
                 <label for="end" >Latest: </label>
                 <select id="end">
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 AM
-                        </option>
-                    ))}
-                    {times.map((hour) => (
-                        <option key={hour}>
-                            {hour}:00 PM
+                    {times.filter((hour) => hour > startTimeIndex).map((hour) => (
+                        <option key={hour} value={hour}>
+                            {formatTime(hour)}
                         </option>
                     ))}
                 </select>
@@ -39,5 +41,5 @@ const Time = () => {
     );
 };
 
-export default Time
+export default Time;
 
