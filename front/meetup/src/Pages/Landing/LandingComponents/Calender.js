@@ -47,14 +47,11 @@ const Calender = () => {
         });
     }
 
-    const [selectedTimes, setSelectedTime] = useState(
-        Array.from({length: 2}, () => Array(24).fill(false))
-    );
-
     return (
 
         <div className="calenderContainer">
             <div id="promptText">What dates?</div>
+            <div id="dateBox">
                 {matrix.map((row, rowIdx) => (
                 <div className="calendarRow" key={rowIdx}>
                     {row.map((cell, colIdx) => (
@@ -68,7 +65,8 @@ const Calender = () => {
                         </button>
                     ))}
             </div>
-            ))}
+                ))}
+            </div>
         </div>
 
     );    

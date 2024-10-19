@@ -20,7 +20,7 @@ const Time = () => {
     return(
         <div className="timeContainer">
                 <div id="promptText">What times?</div>
-                <label for="start" >Earliest: </label>
+                <label htmlFor="start" >Earliest: </label>
                 <select id="start" onChange={handleStartChange}>
                     {times.map((hour) => (
                         <option key={hour} value={hour}>
@@ -28,7 +28,7 @@ const Time = () => {
                         </option>
                     ))}
                 </select>
-                <label for="end" >Latest: </label>
+                <label htmlFor="end" >Latest: </label>
                 <select id="end">
                     {times.filter((hour) => hour > startTimeIndex).map((hour) => (
                         <option key={hour} value={hour}>
@@ -36,7 +36,6 @@ const Time = () => {
                         </option>
                     ))}
                 </select>
-                    
             </div>
     );
 };
