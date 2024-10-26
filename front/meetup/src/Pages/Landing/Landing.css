@@ -3,36 +3,24 @@ html, body {
     margin: 0;
 }
 
-.submit{
-    position: absolute;
-    bottom: 25%;
-    left: 45%;
-
-    cursor: pointer;
-
-    width: 20vh;
-    height: 10vh;
-
-    font-size: 30px;
-    color: #49454F;
-    font-family: "Chakra Petch", sans-serif;
-    font-weight: 300;
-    font-style: normal;
-
-}
-
 .landingContainer{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     margin: auto;
-    padding-top: 5vh;
 
     width: 100vw; 
-    height: 100vh; 
+    height: 150vh; 
 
     background-color: #54516a;
 
     position: relative;
+    overflow-y: auto; 
+    overflow-x: hidden;
+}
+
+.landingContainer > * {
+    margin: 20px 0; 
+    height: 40vh; 
 }

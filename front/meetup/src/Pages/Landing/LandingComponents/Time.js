@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import "./Time.css";
 
-const Time = () => {
+const Time = ({setStartTime, setEndTime}) => {
 
     const times = Array.from({length: 24}, (_, i) => i);
     const [startTimeIndex, setStartTimeIndex] = useState(0);
@@ -9,6 +9,12 @@ const Time = () => {
     const handleStartChange = (e) =>{
         const selection = parseInt(e.target.value);
         setStartTimeIndex(selection);
+        setStartTime(selection)
+    }
+
+    const handleEndChange = (e) =>{
+        const selection = parseInt(e.target.value);
+        setEndTime(selection);
     }
 
     const formatTime = (hour) => {
@@ -28,7 +34,7 @@ const Time = () => {
                         </option>
                     ))}
                 </select>
-                <label htmlFor="end" >Latest: </label>
+                <label htmlFor="end" onChange={handleEndChange}>Latest: </label>
                 <select id="end">
                     {times.filter((hour) => hour > startTimeIndex).map((hour) => (
                         <option key={hour} value={hour}>
