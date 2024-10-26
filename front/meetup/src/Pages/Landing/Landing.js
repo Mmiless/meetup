@@ -12,7 +12,7 @@ const Landing = () => {
 
     function createEvent(){
         // POST request endpoint create resource
-        navigate('/EventLogin');
+        navigate('/Login');
     }
 
     return (
