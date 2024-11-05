@@ -1,9 +1,12 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.http import HttpResponse
 
-from app.views import create_event
+def home(request):
+    return HttpResponse("Backed functioning")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/events/', create_event, name='create-event'),
+    path('api/', include('app.urls')), 
+    path('', home),
 ]

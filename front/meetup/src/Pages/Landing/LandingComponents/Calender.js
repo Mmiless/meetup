@@ -16,7 +16,7 @@ function fillMatrix(){
 
     let dayCount = date.getDate();
     let nextMonthDayCount = 1;
-    let extraDayCount = 1; // 
+    let extraDayCount = 1; 
     const month = [];
 
     for(let r = 0; r < 5; r++){
@@ -41,7 +41,7 @@ const Calender = () => {
 
     const handleDateClick = (rowIdx, colIdx) => {
         setSelectedDates(prevState => {
-            const newState = prevState.map(row => row.slice());
+            let newState = prevState.map(row => row.slice());
             newState[rowIdx][colIdx] = !newState[rowIdx][colIdx];
             return newState;
         });

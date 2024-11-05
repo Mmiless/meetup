@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from rest_framework import serializers
+import uuid
 
 class Event(models.Model):
     id = models.AutoField(primary_key=True) 
-    hash = models.CharField(max_length=255, blank=False, null=False)
+    hash = models.CharField(max_length=255, blank=False, null=False, default=uuid.uuid4)
     name = models.CharField(max_length=255, blank=True, null=True)
     start_time = models.IntegerField(blank=False, null=False)
     end_time = models.IntegerField(blank=False, null=False)

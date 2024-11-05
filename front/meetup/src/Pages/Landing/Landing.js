@@ -1,12 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 import Calender from "./LandingComponents/Calender";
 import Time from "./LandingComponents/Time";
 import Submission from "./LandingComponents/Submission";
 
 import "./Landing.css"
+
+const getDateFromIndices = (rowIdx, colIdx, startDate) => {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + (rowIdx * 7) + colIdx);
+    return date.toISOString().split('T')[0]; 
+};
 
 const Landing = () => {
 
@@ -15,22 +22,49 @@ const Landing = () => {
     const [endTime, setEndTime] = useState(1);
     const [selectedDates, setSelectedDates] = useState([]);
 
-    const createEvent = (eventName) => {
-        // POST request endpoint create resource
+    const createEvent = async (eventName) => {
+        let formattedDates = [];
+        selectedDates.forEach((row, rowIdx) => {
+            row.forEach((isSelected, colIdx) => {
+                if (isSelected) {
+                    formattedDates.push(getDateFromIndices(rowIdx, colIdx, new Date()));
+                }
+            });
+        });
+        const eventDetails = {
+            hash: uuidv4(),
+            name: eventName,
+            start_time: startTime,
+            end_time: endTime,
+            dates: formattedDates,
+            participants: [],
+        };
+        console.log(eventDetails);
 
-        navigate('/Login');
-        // have start and endTime
-        const name_ = eventName
-        const start = startTime
-        const end  = endTime
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/events/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(eventDetails),
+            });
 
-    }
+            if (response.ok) {
+                navigate('/Login');
+            } else {
+                console.error('Failed to create event');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     return (
         <div className="landingContainer">
-                <Calender />
+                <Calender setSelectedDates={setSelectedDates} />
                 <Time setStartTime={setStartTime} setEndTime={setEndTime} />
-                <Submission setStartTime={setStartTime} setEndTime={setEndTime} onSubmit={createEvent} />
+                <Submission onSubmit={createEvent} />
         </div>
             
     );
