@@ -9,7 +9,7 @@ class Event(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     start_time = models.IntegerField(blank=False, null=False)
     end_time = models.IntegerField(blank=False, null=False)
-    dates = ArrayField(models.DateField(), blank=False, null=False)  
+    dates = ArrayField(models.DateField(), blank=True, null=True) # change to false later  
     participants = models.JSONField(blank=True, null=True) 
 
     class Meta:
