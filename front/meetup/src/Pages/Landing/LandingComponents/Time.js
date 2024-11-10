@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import "./Time.css";
 
-const Time = ({setStartTime, setEndTime}) => {
+const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
 
     const times = Array.from({length: 24}, (_, i) => i);
     const [startTimeIndex, setStartTimeIndex] = useState(0);
@@ -10,6 +10,10 @@ const Time = ({setStartTime, setEndTime}) => {
         const selection = parseInt(e.target.value);
         setStartTimeIndex(selection);
         setStartTime(selection)
+
+        if (endTime <= selection) {
+            setEndTime(selection + 1);
+        }
     }
 
     const handleEndChange = (e) =>{
@@ -25,24 +29,24 @@ const Time = ({setStartTime, setEndTime}) => {
 
     return(
         <div className="timeContainer">
-                <div id="promptText">What times?</div>
-                <label htmlFor="start" >Earliest: </label>
-                <select id="start" onChange={handleStartChange}>
-                    {times.map((hour) => (
-                        <option key={hour} value={hour}>
-                            {formatTime(hour)}
-                        </option>
-                    ))}
-                </select>
-                <label htmlFor="end" onChange={handleEndChange}>Latest: </label>
-                <select id="end">
-                    {times.filter((hour) => hour > startTimeIndex).map((hour) => (
-                        <option key={hour} value={hour}>
-                            {formatTime(hour)}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <div id="promptText">What times?</div>
+            <label htmlFor="start" >Earliest: </label>
+            <select id="start" onChange={handleStartChange}>
+                {times.map((hour) => (
+                    <option key={hour} value={hour}>
+                        {formatTime(hour)}
+                    </option>
+                ))}
+            </select>
+            <label htmlFor="end" >Latest: </label>
+            <select id="end" onChange={handleEndChange}>
+                {times.filter((hour) => hour > startTimeIndex).map((hour) => (
+                    <option key={hour} value={hour}>
+                        {formatTime(hour)}
+                    </option>
+                ))}
+            </select>
+        </div>
     );
 };
 

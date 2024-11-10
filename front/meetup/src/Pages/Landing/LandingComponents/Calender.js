@@ -31,13 +31,9 @@ function fillMatrix(){
     return month;
 }
 
-const Calender = () => {
+const Calender = ({selectedDates, setSelectedDates}) => {
 
     const matrix = fillMatrix();
-
-    const [selectedDates, setSelectedDates] = useState(
-        Array.from({ length: 5 }, () => Array(7).fill(false))
-    );
 
     const handleDateClick = (rowIdx, colIdx) => {
         setSelectedDates(prevState => {
@@ -72,4 +68,4 @@ const Calender = () => {
     );    
 };
 
-export default Calender
+export default Calender;

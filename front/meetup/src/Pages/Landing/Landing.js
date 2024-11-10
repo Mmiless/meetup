@@ -10,9 +10,15 @@ import Submission from "./LandingComponents/Submission";
 import "./Landing.css"
 
 const getDateFromIndices = (rowIdx, colIdx, startDate) => {
-    const date = new Date(startDate);
-    date.setDate(date.getDate() + (rowIdx * 7) + colIdx);
-    return date.toISOString().split('T')[0]; 
+    const date = new Date(Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()));
+    date.setUTCDate(date.getUTCDate() + (rowIdx * 7) + colIdx);
+
+    // Format as a date string in "YYYY-MM-DD" format
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`; 
 };
 
 const Landing = () => {
@@ -20,10 +26,11 @@ const Landing = () => {
     const navigate = useNavigate();
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(1);
-    const [selectedDates, setSelectedDates] = useState([]);
+    const [selectedDates, setSelectedDates] = useState(Array.from({ length: 5 }, () => Array(7).fill(false)));
 
     const createEvent = async (eventName) => {
         let formattedDates = [];
+        console.log(selectedDates);
         selectedDates.forEach((row, rowIdx) => {
             row.forEach((isSelected, colIdx) => {
                 if (isSelected) {
@@ -62,8 +69,8 @@ const Landing = () => {
 
     return (
         <div className="landingContainer">
-                <Calender setSelectedDates={setSelectedDates} />
-                <Time setStartTime={setStartTime} setEndTime={setEndTime} />
+                <Calender selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+                <Time startTime= {startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
                 <Submission onSubmit={createEvent} />
         </div>
             
