@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Landing from './Pages/Landing/Landing.js'
-import Login from './Pages/Login/Login.js'
+import Landing from './Pages/Landing/Landing'
+import EventRoom from './Pages/EventRoom/EventRoom'
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Landing />} />
-          <Route path='/Login' element={<Login />} />
+          <Route path='/EventRoom' element={<EventRoom />} />
         </Routes>
       </BrowserRouter>
     </div>

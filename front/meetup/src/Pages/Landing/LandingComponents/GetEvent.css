@@ -1,4 +1,4 @@
-.eventNameContainer {
+.eventHashContainer {
     width: 35%; 
     height: 300px;
     background-color: #ebeaed; 
@@ -10,7 +10,7 @@
     position: relative;
 }
 
-.nameLabel {
+.hashLabel {
     font-size: 30px; 
     color: #49454F; 
     font-family: "Chakra Petch", sans-serif;
@@ -18,7 +18,7 @@
     margin-bottom: 10px; 
 }
 
-.eventName {
+.eventHash {
     width: 60%; 
     height: 40px; 
     border: 2px solid #49454F; 

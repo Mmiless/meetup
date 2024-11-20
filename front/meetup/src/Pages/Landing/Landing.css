@@ -1,26 +1,61 @@
 html, body {
     height: 100%;
     margin: 0;
+    overflow: auto;
+    overflow-y: scroll;
 }
 
-.landingContainer{
+.landingContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.createEventContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-
-    width: 100vw; 
-    height: 150vh; 
-
-    background-color: #54516a;
-
-    position: relative;
-    overflow-y: auto; 
-    overflow-x: hidden;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 45%;
+    padding: 20px;
 }
 
-.landingContainer > * {
-    margin: 20px 0; 
-    height: 40vh; 
+.createEventContainer h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
 }
+
+.createEventContainer > * {
+    margin-bottom: 20px;
+    width: 100%; 
+}
+
+.getEventContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 45%;
+    padding: 20px;
+}
+
+.getEventContainer h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.getEventContainer > * {
+    width: 100%; 
+}
+
+
+

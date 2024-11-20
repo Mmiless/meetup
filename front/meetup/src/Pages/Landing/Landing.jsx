@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Calender from "./LandingComponents/Calender";
 import Time from "./LandingComponents/Time";
 import Submission from "./LandingComponents/Submission";
+import GetEvent from "./LandingComponents/GetEvent";
 
 import "./Landing.css"
 
@@ -49,7 +50,7 @@ const Landing = () => {
         console.log(eventDetails);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/events/', {
+            const response = await fetch('http://127.0.0.1:8000/api/newevent/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,6 +59,7 @@ const Landing = () => {
             });
 
             if (response.ok) {
+                localStorage.setItem('eventDetails', JSON.stringify(eventDetails));
                 navigate('/Login');
             } else {
                 console.error('Failed to create event');
@@ -67,11 +69,37 @@ const Landing = () => {
         }
     };
 
+    const getEvent = async (eventHash) => {
+        
+        try{
+            const response = await fetch('http://127.0.0.1:8000/api/getevent/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(""),
+            });
+            if (response.ok) {
+                // set local storage to returned event details
+            }
+
+        } catch (e){
+            console.error('Error: ', e)
+        }
+    };
+
     return (
         <div className="landingContainer">
+            <div className="createEventContainer">
+                <h1>Create Event</h1>
                 <Calender selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
-                <Time startTime= {startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
+                <Time startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
                 <Submission onSubmit={createEvent} />
+            </div>
+            <div className="getEventContainer">
+                <h1>Go To Existing Event</h1>
+                <GetEvent onSubmit={getEvent} />
+            </div>
         </div>
             
     );

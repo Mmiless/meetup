@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import create_event
+from .views import *
 
 urlpatterns = [
-    path('events/', create_event, name='create-event'),
+    path('newevent/', create_event, name='create-event'),
+    path('getevent/', get_event, name='get-event'),
+    path('login/', verify_login, name='verify-login')
 ]
