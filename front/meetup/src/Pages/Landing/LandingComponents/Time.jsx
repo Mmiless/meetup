@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import "./Time.css";
 
 const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
 
@@ -28,24 +27,28 @@ const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
     };
 
     return(
-        <div className="timeContainer">
-            <div id="promptText">What times?</div>
-            <label htmlFor="start" >Earliest: </label>
-            <select className="select" id="start" onChange={handleStartChange}>
-                {times.map((hour) => (
-                    <option key={hour} value={hour}>
-                        {formatTime(hour)}
-                    </option>
-                ))}
-            </select>
-            <label htmlFor="end" >Latest: </label>
-            <select className = "select" id="end" onChange={handleEndChange}>
-                {times.filter((hour) => hour > startTimeIndex).map((hour) => (
-                    <option key={hour} value={hour}>
-                        {formatTime(hour)}
-                    </option>
-                ))}
-            </select>
+        <div class="flex flex-col" className="timeContainer">
+            <div class="font-semibold" id="promptText">What times?</div>
+            <div>
+                <label htmlFor="start" >Earliest: </label>
+                <select class="border border-gray-300 rounded-lg p-1" id="start" onChange={handleStartChange}>
+                    {times.map((hour) => (
+                        <option key={hour} value={hour}>
+                            {formatTime(hour)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <label htmlFor="end" >Latest: </label>
+                <select class="border border-gray-300 rounded-lg p-1" id="end" onChange={handleEndChange}>
+                    {times.filter((hour) => hour > startTimeIndex).map((hour) => (
+                        <option key={hour} value={hour}>
+                            {formatTime(hour)}
+                        </option>
+                    ))}
+                </select>
+            </div>
         </div>
     );
 };

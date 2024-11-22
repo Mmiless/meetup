@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
+import Header from "../../Hooks/Header";
 import Calender from "./LandingComponents/Calender";
 import Time from "./LandingComponents/Time";
 import Submission from "./LandingComponents/Submission";
 import GetEvent from "./LandingComponents/GetEvent";
-
-import "./Landing.css"
 
 const getDateFromIndices = (rowIdx, colIdx, startDate) => {
     const date = new Date(Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()));
@@ -60,7 +59,7 @@ const Landing = () => {
 
             if (response.ok) {
                 localStorage.setItem('eventDetails', JSON.stringify(eventDetails));
-                navigate('/Login');
+                navigate('/EventRoom');
             } else {
                 console.error('Failed to create event');
             }
@@ -89,17 +88,19 @@ const Landing = () => {
     };
 
     return (
-        <div className="landingContainer">
-            <div className="createEventContainer">
-                <h1>Create Event</h1>
+        <div class="flex flex-col items-center space-y-8 pb-8 font-source-code"className="landingContainer">
+            <Header />
+            <div class="flex flex-col items-center space-y-4 border border-gray-300 p-4" className="getEventContainer">
+                <h1 class="text-lg font-bold mb-4 text-center" >Existing event</h1>
+                <GetEvent onSubmit={getEvent} />
+            </div>
+            <div class="flex flex-col items-center space-y-4 border border-gray-300 p-4"className="createEventContainer">
+                <h1 class="text-lg font-bold mb-4 text-center">New event</h1>
                 <Calender selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
                 <Time startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
                 <Submission onSubmit={createEvent} />
             </div>
-            <div className="getEventContainer">
-                <h1>Go To Existing Event</h1>
-                <GetEvent onSubmit={getEvent} />
-            </div>
+            
         </div>
             
     );

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./Calender.css";
 
 function getEndDate(month, year){
     const days = new Map([["1", 31], ["2", 28], ["3", 31], ["4", 30], ["5", 31], ["6", 30], 
@@ -46,12 +45,12 @@ const Calender = ({selectedDates, setSelectedDates}) => {
     return (
 
         <div className="calenderContainer">
-            <div id="promptText">What dates?</div>
-            <div id="dateBox">
+            <div class="font-semibold" id="promptText">What dates?</div>
+            <div class="flex flex-col gap-2" id="dateBox">
                 {matrix.map((row, rowIdx) => (
-                <div className="calendarRow" key={rowIdx}>
+                <div class="flex flex-row gap-2" className="calendarRow" key={rowIdx}>
                     {row.map((cell, colIdx) => (
-                        <button className="calendarButton" key={colIdx}
+                        <button class="w-12 h-12 flex items-center justify-center" className="calendarButton" key={colIdx}
                             onClick={() => handleDateClick(rowIdx, colIdx)}
                             style={{
                                 backgroundColor: selectedDates[rowIdx][colIdx] ? "black" : "#ebeaed",
