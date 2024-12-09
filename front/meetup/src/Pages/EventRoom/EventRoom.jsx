@@ -5,13 +5,14 @@ import TimeSlots from './EventRoomComponents/TimeSlots';
 const EventRoom = () => {
 
     const login = async(username, password) => {
-        console.log(username, password);
+        const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
+        console.log(hash, username, password);
         const response = await fetch('http://127.0.0.1:8000/api/login', {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({username, password}),
+            body: JSON.stringify({hash, username, password}),
         });
 
         if (response.ok) {
@@ -22,9 +23,9 @@ const EventRoom = () => {
     return (
         <div className='flex flex-col items-center space-y-8 pb-8'>
             <Header />
-            <div className='flex flex-row'> 
+            <div className='flex flex-row space-x-4'> 
                 <div className="border border-gray-300 p-4">
-                    <Login onsubmit={login}/>
+                    <Login onSubmit={login}/>
                 </div>
                 <div className="border border-gray-300 p-4">
                     <TimeSlots />

@@ -27,8 +27,6 @@ const Login = ({ onSubmit }) => {
             <button className="bg-black text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition font-source-code" type="submit">Log In / Sign Up</button>
         </form>
     );
-
-    
 };  
 
 export default Login;

@@ -16,17 +16,22 @@ def create_event(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
-def get_event(request, event_hash):
+def get_event(request):
+    event_hash = request.query_params.get('hash')
     try:
         event = Event.objects.get(hash=event_hash)
     except Event.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
     serializer = EventSerializer(event)
     return Response(serializer.data)
     
 @api_view(['POST'])
 def verify_login(request):
-    # need to pass event hash, uname, and pword
-        # query for event hash, search participants for uname, check pword
+    event_hash = request.query_params.get('hash')
+    username = request.query_params.get('username')
+    password = request.query_params.get('password')
+    # event should already exist
+    event = Event.objects.get(hash=event_hash)
+    event_participants = event.participants.all()
+
     pass
