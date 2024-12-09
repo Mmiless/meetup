@@ -44,13 +44,13 @@ const Calender = ({selectedDates, setSelectedDates}) => {
 
     return (
 
-        <div className="calenderContainer">
-            <div class="font-semibold" id="promptText">What dates?</div>
-            <div class="flex flex-col gap-2" id="dateBox">
+        <div>
+            <div className="font-semibold" id="promptText">What dates?</div>
+            <div className="flex flex-col gap-2" id="dateBox">
                 {matrix.map((row, rowIdx) => (
-                <div class="flex flex-row gap-2" className="calendarRow" key={rowIdx}>
+                <div className="flex flex-row gap-2" key={rowIdx}>
                     {row.map((cell, colIdx) => (
-                        <button class="w-12 h-12 flex items-center justify-center" className="calendarButton" key={colIdx}
+                        <button className="w-12 h-12 flex items-center justify-center" key={colIdx}
                             onClick={() => handleDateClick(rowIdx, colIdx)}
                             style={{
                                 backgroundColor: selectedDates[rowIdx][colIdx] ? "black" : "#ebeaed",

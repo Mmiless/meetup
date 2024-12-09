@@ -24,6 +24,7 @@ const getDateFromIndices = (rowIdx, colIdx, startDate) => {
 const Landing = () => {
 
     const navigate = useNavigate();
+    const [eventHash, setEventHash] = useState('');
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(1);
     const [selectedDates, setSelectedDates] = useState(Array.from({ length: 5 }, () => Array(7).fill(false)));
@@ -44,7 +45,7 @@ const Landing = () => {
             start_time: startTime,
             end_time: endTime,
             dates: formattedDates,
-            participants: [],
+            participants: "{}",
         };
         console.log(eventDetails);
 
@@ -69,17 +70,18 @@ const Landing = () => {
     };
 
     const getEvent = async (eventHash) => {
-        
         try{
-            const response = await fetch('http://127.0.0.1:8000/api/getevent/', {
+            const response = await fetch('http://127.0.0.1:8000/api/getevent?hash=' + eventHash, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(""),
             });
             if (response.ok) {
-                // set local storage to returned event details
+                const eventDetails = await response.json();
+                localStorage.setItem('eventDetails', JSON.stringify(eventDetails));
+                console.log(eventDetails);
+                navigate('/EventRoom');
             }
 
         } catch (e){
@@ -88,14 +90,14 @@ const Landing = () => {
     };
 
     return (
-        <div class="flex flex-col items-center space-y-8 pb-8 font-source-code"className="landingContainer">
+        <div className="flex flex-col items-center space-y-8 pb-8 font-source-code">
             <Header />
-            <div class="flex flex-col items-center space-y-4 border border-gray-300 p-4" className="getEventContainer">
-                <h1 class="text-lg font-bold mb-4 text-center" >Existing event</h1>
-                <GetEvent onSubmit={getEvent} />
+            <div className="flex flex-col items-center space-y-4 border border-gray-300 p-4">
+                <h1 className="text-lg font-bold mb-4 text-center" >Existing event</h1>
+                <GetEvent eventHash={eventHash} setEventHash={setEventHash} onSubmit={getEvent} />
             </div>
-            <div class="flex flex-col items-center space-y-4 border border-gray-300 p-4"className="createEventContainer">
-                <h1 class="text-lg font-bold mb-4 text-center">New event</h1>
+            <div className="flex flex-col items-center space-y-4 border border-gray-300 p-4">
+                <h1 className="text-lg font-bold mb-4 text-center">New event</h1>
                 <Calender selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
                 <Time startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
                 <Submission onSubmit={createEvent} />

@@ -27,11 +27,11 @@ const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
     };
 
     return(
-        <div class="flex flex-col" className="timeContainer">
-            <div class="font-semibold" id="promptText">What times?</div>
-            <div>
+        <div className="flex flex-col">
+            <div className="font-semibold" id="promptText">What times?</div>
+            <div className="p-1">
                 <label htmlFor="start" >Earliest: </label>
-                <select class="border border-gray-300 rounded-lg p-1" id="start" onChange={handleStartChange}>
+                <select className="border border-gray-300 rounded-lg p-1" id="start" onChange={handleStartChange}>
                     {times.map((hour) => (
                         <option key={hour} value={hour}>
                             {formatTime(hour)}
@@ -41,7 +41,7 @@ const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
             </div>
             <div>
                 <label htmlFor="end" >Latest: </label>
-                <select class="border border-gray-300 rounded-lg p-1" id="end" onChange={handleEndChange}>
+                <select className="border border-gray-300 rounded-lg p-1" id="end" onChange={handleEndChange}>
                     {times.filter((hour) => hour > startTimeIndex).map((hour) => (
                         <option key={hour} value={hour}>
                             {formatTime(hour)}
