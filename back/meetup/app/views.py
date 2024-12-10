@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+import json
 
 from .event import Event, EventSerializer
 
@@ -13,7 +14,7 @@ def create_event(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
         print(serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
 def get_event(request):
@@ -27,11 +28,22 @@ def get_event(request):
     
 @api_view(['POST'])
 def verify_login(request):
-    event_hash = request.query_params.get('hash')
-    username = request.query_params.get('username')
-    password = request.query_params.get('password')
+    data = request.data
+    event_hash = data['hash']
+    username = data['username']
+    password = data['password']
+    print(event_hash, username, password)
     # event should already exist
     event = Event.objects.get(hash=event_hash)
-    event_participants = event.participants.all()
-
-    pass
+    participants = event.participants
+    if username in participants:
+        if participants[username]['password'] == password:
+            return Response(participants['username'], status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    participants[username] = {'password': password, 'times': {}}
+    event.participants = participants
+    event.save()
+    return Response(participants['username'], status=status.HTTP_200_OK)
+            
+            

@@ -1,13 +1,16 @@
+import React, {useState} from 'react';
+
 import Header from '../../Hooks/Header';
 import Login from './EventRoomComponents/Login';
 import TimeSlots from './EventRoomComponents/TimeSlots';
 
 const EventRoom = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const login = async(username, password) => {
         const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
         console.log(hash, username, password);
-        const response = await fetch('http://127.0.0.1:8000/api/login', {
+        const response = await fetch('http://127.0.0.1:8000/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
