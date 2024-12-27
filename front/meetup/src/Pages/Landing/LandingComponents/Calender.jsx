@@ -55,7 +55,11 @@ const Calender = ({selectedDates, setSelectedDates}) => {
                             style={{
                                 backgroundColor: selectedDates[rowIdx][colIdx] ? "black" : "#ebeaed",
                                 color: selectedDates[rowIdx][colIdx] ? "#ebeaed" : "black"
-                            }}>
+                            }}
+                            onMouseOver={(e) =>{
+                                if(e.buttons === 1) handleDateClick(rowIdx, colIdx);
+                            }}
+                            >
                             {cell}
                         </button>
                     ))}
