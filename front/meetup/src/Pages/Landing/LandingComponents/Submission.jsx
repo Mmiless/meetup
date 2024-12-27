@@ -13,10 +13,10 @@ const Submission = ({ onSubmit }) => {
     };
 
     return (
-        <form className="flex flex-col p-4 space-y-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
             <label className="nameLabel font-semibold" htmlFor="eventName">Event Name</label>
-            <input className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500" type="text" id="eventName" name="eventName"  value={eventName} onChange={handleChange} required />
-            <button className="bg-black text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition" type="submit">Create Event</button>
+            <input className="w-60 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500" type="text" id="eventName" name="eventName"  value={eventName} onChange={handleChange} required />
+            <button className="w-60 bg-black text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition" type="submit">Create Event</button>
         </form>
     );
 };

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, {useState} from 'react';
 
 const Login = ({ onSubmit }) => {
     const [password, setPassword] = useState('');
@@ -19,7 +18,7 @@ const Login = ({ onSubmit }) => {
     };
 
     return (
-        <form className="flex flex-col p-4 space-y-4" onSubmit={handleSubmit}>
+        <form className="w-80 flex flex-col p-4 space-y-4" onSubmit={handleSubmit}>
             <label className="nameLabel font-semibold font-source-code" htmlFor="eventName">Name</label>
             <input className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500" type="text" id="eventName" name="eventName"  value={username} onChange={handleUsernameChange} required />
             <label className="nameLabel font-semibold font-source-code" htmlFor="eventName">Password (Optional)</label>

@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from "react";
 
-const TimeSlots = () => {
-
-    const [selectedTimes, setSelectedTimes] = useState({});
+const TimeSlots = ({username, userSelectedTimes, setUserSelectedTimes}) => {
 
     const eventDetails = JSON.parse(localStorage.getItem('eventDetails'));
     const startTime = eventDetails.start_time;
@@ -19,24 +17,54 @@ const TimeSlots = () => {
         const ymd = day.split('-');
         return ymd[1] + "/" + ymd[2];
     }
+
+    const debounce = (func, delay=1000) => {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func(...args); }, 
+            delay);
+        };
+    };
+
+    const updateServer = debounce(async (userSelectedTimes) => {
+        const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
+        const response = await fetch('http://127.0.0.1:8000/api/update/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({hash, username, times: userSelectedTimes}),
+
+        });
+        if(response.ok){
+            console.log("Updated server");
+        }
+        else{
+            console.error("Failed to update server");
+        }
+    });
     
     const handleTimeClick = (day, time) => {
-        setSelectedTimes((prevState) =>{
+        setUserSelectedTimes((prevState) =>{
             const daySlots = prevState[day] || {};
-            return {
+            const newState = {
                 ...prevState,
                 [day]:{
                     ...daySlots,
                     [time]: !daySlots[time]
                 }
             }
+            updateServer(newState);
+            return newState;
         })
+
     };
 
     // For logging times
     React.useEffect(() => {
-        console.log(selectedTimes);
-    }, [selectedTimes]);
+        console.log(userSelectedTimes);
+    }, [userSelectedTimes]);
     
     return (
         <div className="select-none flex flex-col space-y-1">
@@ -55,7 +83,7 @@ const TimeSlots = () => {
                     <div key={hourIdx} className="flex flex-row gap-x-1">
                         <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2">{formatTime(hour)}</div>
                         {dates.map((day, dayIdx) => {
-                            const isSelected = selectedTimes[day]?.[hour];
+                            const isSelected = userSelectedTimes[day]?.[hour];
                             return (
                                 <div
                                     key={dayIdx}

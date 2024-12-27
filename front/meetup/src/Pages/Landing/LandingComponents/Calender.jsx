@@ -44,7 +44,7 @@ const Calender = ({selectedDates, setSelectedDates}) => {
 
     return (
 
-        <div>
+        <div className="flex flex-col align-center space-y-4">
             <div className="font-semibold" id="promptText">What dates?</div>
             <div className="flex flex-col gap-2" id="dateBox">
                 {matrix.map((row, rowIdx) => (

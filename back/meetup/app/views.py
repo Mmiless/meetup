@@ -35,14 +35,14 @@ def verify_login(request):
     print(event_hash, username, password)
     # event should already exist
     event = Event.objects.get(hash=event_hash)
-    participants = event.participants
+    participants = event.participants or {}
     if username in participants:
         if participants[username]['password'] == password:
             return Response(participants[username], status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
     participants[username] = {'password': password, 'times': {}}
-    event.participants = json.dumps(participants)
+    event.participants = json.dumps(participants) # temporary fix: JSONField not serializing properly
     event.save()
     return Response(participants[username], status=status.HTTP_200_OK)
 
@@ -53,9 +53,9 @@ def update_user_times(request):
     username = data['username']
     times = data['times']
     event = Event.objects.get(hash=event_hash)
-    participants = event.participants
+    participants = event.participants or {}
     participants[username]['times'] = times
-    event.participants = json.dumps(participants)
+    event.participants = json.dumps(participants) # temporary fix: JSONField not serializing properly
     event.save()
     return Response(participants[username], status=status.HTTP_200_OK)
             

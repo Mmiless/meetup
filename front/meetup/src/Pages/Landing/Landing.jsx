@@ -92,12 +92,12 @@ const Landing = () => {
     return (
         <div className="flex flex-col items-center space-y-8 pb-8 font-source-code">
             <Header />
-            <div className="flex flex-row space-x-4">
-                <div className="flex flex-col items-center space-y-4 border border-gray-300 p-4">
+            <div className="flex items-start flex-row space-x-4">
+                <div className="flex flex-col items-start space-y-4 border border-gray-300 p-4">
                     <h1 className="text-lg font-bold mb-4 text-center" >Existing event</h1>
                     <GetEvent eventHash={eventHash} setEventHash={setEventHash} onSubmit={getEvent} />
                 </div>
-                <div className="flex flex-col items-center space-y-4 border border-gray-300 p-4">
+                <div className="flex p-4 flex-col items-start space-y-4 border border-gray-300">
                     <h1 className="text-lg font-bold mb-4 text-center">New event</h1>
                     <Calender selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
                     <Time startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
