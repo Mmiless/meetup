@@ -26,31 +26,34 @@ const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
         return `${hourTwelve}:00 ${period}`;
     };
 
-    return(
+    return (
         <div className="flex flex-col">
-            <div className="font-semibold" id="promptText">What times?</div>
-            <div className="p-1">
-                <label htmlFor="start" >Earliest: </label>
-                <select className="border border-gray-300 rounded-lg p-1" id="start" onChange={handleStartChange}>
-                    {times.map((hour) => (
-                        <option key={hour} value={hour}>
-                            {formatTime(hour)}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label htmlFor="end" >Latest: </label>
-                <select className="border border-gray-300 rounded-lg p-1" id="end" onChange={handleEndChange}>
-                    {times.filter((hour) => hour > startTimeIndex).map((hour) => (
-                        <option key={hour} value={hour}>
-                            {formatTime(hour)}
-                        </option>
-                    ))}
-                </select>
+            <div className="font-semibold mb-2" id="promptText">What times?</div>
+            <div className="flex items-center space-x-4">
+                <div className="flex flex-col space-y-4">
+                    <label htmlFor="start">Earliest:</label>
+                    <label htmlFor="end">Latest:</label>
+                </div>
+                <div className="flex flex-col space-y-4">
+                    <select className="border border-gray-300 rounded-lg p-1" id="start" onChange={handleStartChange}>
+                        {times.map((hour) => (
+                            <option key={hour} value={hour}>
+                                {formatTime(hour)}
+                            </option>
+                        ))}
+                    </select>
+                    <select className="border border-gray-300 rounded-lg p-1" id="end" onChange={handleEndChange}>
+                        {times.filter((hour) => hour > startTimeIndex).map((hour) => (
+                                <option key={hour} value={hour}>
+                                    {formatTime(hour)}
+                                </option>
+                            ))}
+                    </select>
+                </div>
             </div>
         </div>
     );
+    
 };
 
 export default Time;

@@ -54,12 +54,14 @@ const EventRoom = () => {
                          <Logout onSubmit={logout} username={username} /> }
                 </div>
                 <div className="border border-gray-300 p-4 max-w-[1000px] overflow-x-scroll">
+                    <div className="min-w-max">
                         <TimeSlots
                             isLoggedIn={isLoggedIn}
                             username={username}
                             userSelectedTimes={userSelectedTimes}
                             setUserSelectedTimes={setUserSelectedTimes}
                         />
+                    </div>
                 </div>
             </div>
         </div>

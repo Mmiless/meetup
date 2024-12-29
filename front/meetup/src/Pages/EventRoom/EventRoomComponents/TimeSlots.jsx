@@ -70,7 +70,7 @@ const TimeSlots = ({isLoggedIn, username, userSelectedTimes, setUserSelectedTime
                 const hour = startTime + hourIdx;
                 return (
                     <div key={hourIdx} className="flex flex-row gap-x-1">
-                        <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2">{formatTime(hour)}</div>
+                        <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2 whitespace-nowrap mr-2">{formatTime(hour)}</div>
                         {dates.map((day, dayIdx) => {
                             const isSelected = userSelectedTimes[day]?.[hour];
                             return (
