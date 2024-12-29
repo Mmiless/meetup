@@ -95,12 +95,21 @@ const Landing = () => {
             <div className="flex items-start flex-row space-x-4">
                 <div className="flex flex-col items-start space-y-4 border border-gray-300 p-4">
                     <h1 className="text-lg font-bold mb-4 text-center" >Existing event</h1>
-                    <GetEvent eventHash={eventHash} setEventHash={setEventHash} onSubmit={getEvent} />
+                    <GetEvent 
+                        eventHash={eventHash} 
+                        setEventHash={setEventHash} 
+                        onSubmit={getEvent} />
                 </div>
                 <div className="flex p-4 flex-col items-start space-y-4 border border-gray-300">
                     <h1 className="text-lg font-bold mb-4 text-center">New event</h1>
-                    <Calender selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
-                    <Time startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
+                    <Calender 
+                        selectedDates={selectedDates} 
+                        setSelectedDates={setSelectedDates} />
+                    <Time 
+                        startTime={startTime} 
+                        setStartTime={setStartTime} 
+                        endTime={endTime}
+                        setEndTime={setEndTime} />
                     <Submission onSubmit={createEvent} />
                 </div>
             </div>

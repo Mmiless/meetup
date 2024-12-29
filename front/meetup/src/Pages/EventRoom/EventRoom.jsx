@@ -29,8 +29,11 @@ const EventRoom = () => {
             setUserSelectedTimes(data.times);
             
         }
+        else if (response.status === 401) {
+            console.error('Invalid username or password');
+        }
         else{
-            console.error('Failed to login');
+            console.error('Undefined server error');
         }
     };
 
@@ -41,19 +44,22 @@ const EventRoom = () => {
         setusername('');
     }
 
-    useEffect(() => {
-        // show timeslots
-    }, [isLoggedIn]);
-
     return (
         <div className='flex flex-col items-center space-y-8 pb-8'>
             <Header />
-            <div className='flex flex-row space-x-4'> 
+            <div className='flex items-start flex-row space-x-4 '> 
                 <div className="border border-gray-300 p-4">
-                    {!isLoggedIn ? (<Login onSubmit={login} />) : <Logout onSubmit={logout} username={username} /> }
+                    {!isLoggedIn ? 
+                         <Login onSubmit={login} /> : 
+                         <Logout onSubmit={logout} username={username} /> }
                 </div>
-                <div className="border border-gray-300 p-4">
-                    <TimeSlots username={username} userSelectedTimes={userSelectedTimes} setUserSelectedTimes={setUserSelectedTimes} />
+                <div className="border border-gray-300 p-4 max-w-[1000px] overflow-x-scroll">
+                        <TimeSlots
+                            isLoggedIn={isLoggedIn}
+                            username={username}
+                            userSelectedTimes={userSelectedTimes}
+                            setUserSelectedTimes={setUserSelectedTimes}
+                        />
                 </div>
             </div>
         </div>

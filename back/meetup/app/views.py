@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 import json
 
 from .event import Event, EventSerializer
+from .util import *
 
 @api_view(['POST'])
 def create_event(request):
@@ -32,19 +33,19 @@ def verify_login(request):
     event_hash = data['hash']
     username = data['username']
     password = data['password']
-    print(event_hash, username, password)
-    # event should already exist
     event = Event.objects.get(hash=event_hash)
     participants = event.participants or {}
+
     if username in participants:
-        if participants[username]['password'] == password:
+        if check_password(password, participants[username]['password']):
             return Response(participants[username], status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-    participants[username] = {'password': password, 'times': {}}
-    event.participants = json.dumps(participants) # temporary fix: JSONField not serializing properly
-    event.save()
-    return Response(participants[username], status=status.HTTP_200_OK)
+    else:
+        participants[username] = {'password': new_password(password), 'times': {}}
+        event.participants = json.dumps(participants) # temporary fix: JSONField not serializing properly
+        event.save()
+        return Response(participants[username], status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def update_user_times(request):

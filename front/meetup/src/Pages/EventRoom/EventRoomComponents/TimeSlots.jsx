@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 
-const TimeSlots = ({username, userSelectedTimes, setUserSelectedTimes}) => {
+const TimeSlots = ({isLoggedIn, username, userSelectedTimes, setUserSelectedTimes}) => {
 
     const eventDetails = JSON.parse(localStorage.getItem('eventDetails'));
     const startTime = eventDetails.start_time;
@@ -16,36 +16,32 @@ const TimeSlots = ({username, userSelectedTimes, setUserSelectedTimes}) => {
     const formatDate = (day) => {
         const ymd = day.split('-');
         return ymd[1] + "/" + ymd[2];
-    }
-
-    const debounce = (func, delay=1000) => {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => { func(...args); }, 
-            delay);
-        };
     };
 
-    const updateServer = debounce(async (userSelectedTimes) => {
-        const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
-        const response = await fetch('http://127.0.0.1:8000/api/update/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({hash, username, times: userSelectedTimes}),
+    useEffect(() => {
+        const serverUpdate = setTimeout(async () => {
+                const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
+                const response = await fetch('http://127.0.0.1:8000/api/update/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({hash, username, times: userSelectedTimes}),
 
-        });
-        if(response.ok){
-            console.log("Updated server");
-        }
-        else{
-            console.error("Failed to update server");
-        }
-    });
-    
+                });
+                if(response.ok){
+                    console.log("Updated server");
+                }
+                else{
+                    console.error("Failed to update server");
+                }
+            }, 1000);
+
+        return () =>  clearTimeout(serverUpdate);
+    }, [userSelectedTimes]);
+
     const handleTimeClick = (day, time) => {
+        if(!isLoggedIn) return;
         setUserSelectedTimes((prevState) =>{
             const daySlots = prevState[day] || {};
             const newState = {
@@ -54,17 +50,10 @@ const TimeSlots = ({username, userSelectedTimes, setUserSelectedTimes}) => {
                     ...daySlots,
                     [time]: !daySlots[time]
                 }
-            }
-            updateServer(newState);
+            };
             return newState;
-        })
-
+        });
     };
-
-    // For logging times
-    React.useEffect(() => {
-        console.log(userSelectedTimes);
-    }, [userSelectedTimes]);
     
     return (
         <div className="select-none flex flex-col space-y-1">
@@ -88,6 +77,7 @@ const TimeSlots = ({username, userSelectedTimes, setUserSelectedTimes}) => {
                                 <div
                                     key={dayIdx}
                                     className={`w-20 h-11 border cursor-pointer ${
+                                        !isLoggedIn ? "bg-zinc-400" :
                                         isSelected ? "bg-green-500" : "bg-gray-200"
                                     }`}
                                     onMouseDown={() => handleTimeClick(day, hour)}
@@ -102,6 +92,6 @@ const TimeSlots = ({username, userSelectedTimes, setUserSelectedTimes}) => {
             })}
         </div>
     );
-}
+};
 
 export default TimeSlots;
