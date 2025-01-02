@@ -1,3 +1,3 @@
-.venv
-.vscode
-.DS_Store
+dump.rdb
+**/.DS_Store
+.vscode/
