@@ -33,7 +33,7 @@ class EventUserConsumer(AsyncWebsocketConsumer):
         from .event import EventSerializer
         serializer = EventSerializer(data=data)
         if serializer.is_valid():
-            sync_to_async(serializer.save)()
+            await sync_to_async(serializer.save)()
             await self.send(text_data=json.dumps({
                 'type': 'event_created',
                 'event': serializer.data
