@@ -21,20 +21,8 @@ const TimeSlots = ({isLoggedIn, username, userSelectedTimes, setUserSelectedTime
     useEffect(() => {
         const serverUpdate = setTimeout(async () => {
                 const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
-                const response = await fetch('http://127.0.0.1:8000/api/update/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({hash, username, times: userSelectedTimes}),
-
-                });
-                if(response.ok){
-                    console.log("Updated server");
-                }
-                else{
-                    console.error("Failed to update server");
-                }
+                // send websocket message to update times
+                
             }, 1000);
 
         return () =>  clearTimeout(serverUpdate);

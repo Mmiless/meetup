@@ -9,7 +9,6 @@ from .util import *
 @api_view(['POST'])
 def create_event(request):
     serializer = EventSerializer(data=request.data)
-    print(request.data)
     if serializer.is_valid():
         serializer.save() 
         return Response(serializer.data, status=status.HTTP_201_CREATED)

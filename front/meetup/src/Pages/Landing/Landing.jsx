@@ -39,7 +39,8 @@ const Landing = () => {
                 }
             });
         });
-        const eventDetails = {
+        const eventPayload = {
+            action: "create_event",
             hash: uuidv4(),
             name: eventName,
             start_time: startTime,
@@ -47,45 +48,47 @@ const Landing = () => {
             dates: formattedDates,
             participants: "{}",
         };
-        console.log(eventDetails);
 
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/newevent/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(eventDetails),
-            });
-
-            if (response.ok) {
-                localStorage.setItem('eventDetails', JSON.stringify(eventDetails));
+        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventPayload.hash + "/");
+        socket.onopen = () => {
+            socket.send(JSON.stringify(eventPayload));
+        }
+        socket.onmessage = (response) => {
+            const data = JSON.parse(response.data);
+            if (data.type === 'event_created') {
+                const event = data.event;
+                localStorage.setItem('eventDetails', JSON.stringify(event));
                 navigate('/EventRoom');
-            } else {
+            }
+            else {
                 console.error('Failed to create event');
             }
-        } catch (error) {
-            console.error('Error:', error);
+            socket.close();
         }
     };
 
     const getEvent = async (eventHash) => {
-        try{
-            const response = await fetch('http://127.0.0.1:8000/api/getevent?hash=' + eventHash, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.ok) {
-                const eventDetails = await response.json();
-                localStorage.setItem('eventDetails', JSON.stringify(eventDetails));
-                console.log(eventDetails);
+        const eventPayload = {
+            action: "get_event",
+            hash: eventHash,
+        };
+
+        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventPayload.hash + "/");
+        socket.onopen = () => {
+            socket.send(JSON.stringify(eventPayload));
+        }
+        socket.onmessage = (response) => {
+            const data = JSON.parse(response.data);
+            if (data.type === 'event_found') {
+                const event = data.event;
+                localStorage.setItem('eventDetails', JSON.stringify(event));
                 navigate('/EventRoom');
             }
-
-        } catch (e){
-            console.error('Error: ', e)
+            else {
+                console.error('Failed to find event');
+                // TODO: Display proper error message
+            }
+            socket.close();
         }
     };
 
