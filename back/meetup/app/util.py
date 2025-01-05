@@ -27,3 +27,5 @@ def validate_user(event_hash, username, password):
     else:
         participants[username] = {'password': new_password(password), 'times': {}}
         event.participants = json.dumps(participants)
+        event.save()
+        return participants[username]

@@ -2,24 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { getDateFromIndices } from "../../util";
 
 import Header from "../../Hooks/Header";
-import Calender from "./LandingComponents/Calender";
-import Time from "./LandingComponents/Time";
-import Submission from "./LandingComponents/Submission";
-import GetEvent from "./LandingComponents/GetEvent";
-
-const getDateFromIndices = (rowIdx, colIdx, startDate) => {
-    const date = new Date(Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()));
-    date.setUTCDate(date.getUTCDate() + (rowIdx * 7) + colIdx);
-
-    // Format as a date string in "YYYY-MM-DD" format
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}`; 
-};
+import Calender from "./Calender";
+import Time from "./Time";
+import Submission from "./Submission";
+import GetEvent from "./GetEvent";
 
 const Landing = () => {
 
@@ -31,7 +20,6 @@ const Landing = () => {
 
     const createEvent = async (eventName) => {
         let formattedDates = [];
-        console.log(selectedDates);
         selectedDates.forEach((row, rowIdx) => {
             row.forEach((isSelected, colIdx) => {
                 if (isSelected) {

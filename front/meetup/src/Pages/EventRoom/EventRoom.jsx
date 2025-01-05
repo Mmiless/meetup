@@ -1,24 +1,51 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 
 import Header from '../../Hooks/Header';
-import Login from './EventRoomComponents/Login';
-import Logout from './EventRoomComponents/Logout';
-import TimeSlots from './EventRoomComponents/TimeSlots';
+import Login from './Login';
+import Logout from './Logout';
+import TimeSlots from './TimeSlots';
 
 const EventRoom = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userSelectedTimes, setUserSelectedTimes] = useState({});
     const [username, setusername] = useState('');
+    let socket = useRef(null);
 
     const login = async(username, password) => {
         // establish web socket connection
-        setIsLoggedIn(true);
-        setUserSelectedTimes({});
-        setusername(username);
+        const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
+        socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + hash + "/");
+
+        socket.onopen = () => {
+            socket.send(JSON.stringify({
+                action: "login",
+                username: username,
+                password: password
+            }));
+        };
+
+        socket.onmessage = (response) => {
+            const data = JSON.parse(response.data);
+            if (data.type === 'login_success') {
+                console.log('Login success');
+                setIsLoggedIn(true);
+                setUserSelectedTimes(data.times);
+                setusername(username);
+            }
+            else {
+                console.error('Login failed');
+                // TODO: Add more robust messaging
+            }
+        };
+
     };
 
     const logout = () => {
-        // logic to end web socket connection 
+        // logic to end web socket connection, clear ref
+        if (socket.current) {
+            socket.current.close();
+            socket.current = null;
+        }
         setIsLoggedIn(false);
         setUserSelectedTimes({});
         setusername('');
