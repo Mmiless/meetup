@@ -46,6 +46,7 @@ const EventRoom = () => {
             socket.current.close();
             socket.current = null;
         }
+        console.log("Logged out");
         setIsLoggedIn(false);
         setUserSelectedTimes({});
         setusername('');
@@ -64,6 +65,7 @@ const EventRoom = () => {
                     <div className="min-w-max">
                         <TimeSlots
                             isLoggedIn={isLoggedIn}
+                            socket={socket}
                             username={username}
                             userSelectedTimes={userSelectedTimes}
                             setUserSelectedTimes={setUserSelectedTimes}

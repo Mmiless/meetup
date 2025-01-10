@@ -28,6 +28,8 @@ class EventUserConsumer(AsyncWebsocketConsumer):
             await self.create_event(data)
         elif action == "get_event":
             await self.get_event(data)
+        elif action == "update_times":
+            await self.update_times(data)
 
     async def create_event(self, data):
         from .event import EventSerializer
@@ -77,5 +79,19 @@ class EventUserConsumer(AsyncWebsocketConsumer):
                 'type': 'login_failed',
                 'error': 'Invalid login credentials'
             }))
+
+    async def update_times(self, data):
+        from .event import Event
+        event_hash = data['hash']
+        username = data['username']
+        times = data['times']
+        event = await sync_to_async(Event.objects.get)(hash=event_hash)
+        participants = event.participants or {}
+        participants[username]['times'] = times
+        event.participants = json.dumps(participants)
+        await sync_to_async(event.save)()
+        await self.send(text_data=json.dumps({
+            'type': 'times_updated',
+        }))
 
     
