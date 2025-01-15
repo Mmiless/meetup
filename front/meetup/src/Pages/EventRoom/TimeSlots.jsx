@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 
-const TimeSlots = ({isLoggedIn, socket, username, userSelectedTimes, setUserSelectedTimes}) => {
+const TimeSlots = ({isLoggedIn, userSelectedTimes, setUserSelectedTimes, updateUserSelectedTimes}) => {
 
     const eventDetails = JSON.parse(localStorage.getItem('eventDetails'));
     const startTime = eventDetails.start_time;
@@ -20,16 +20,7 @@ const TimeSlots = ({isLoggedIn, socket, username, userSelectedTimes, setUserSele
 
     useEffect(() => {
         const serverUpdate = setTimeout(async () => {
-                const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
-                // send websocket message to update times
-                const messsage = {
-                    action: "update_times",
-                    hash: hash,
-                    username: username,
-                    times: userSelectedTimes
-                }
-                
-                
+                updateUserSelectedTimes()
             }, 1000);
 
         return () =>  clearTimeout(serverUpdate);

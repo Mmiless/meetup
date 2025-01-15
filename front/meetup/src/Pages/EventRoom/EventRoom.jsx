@@ -1,55 +1,27 @@
 import React, {useState, useRef} from 'react';
 
 import Header from '../../Hooks/Header';
+import UserSocket from '../../Hooks/UserSocket'
 import Login from './Login';
 import Logout from './Logout';
 import TimeSlots from './TimeSlots';
 
 const EventRoom = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userSelectedTimes, setUserSelectedTimes] = useState({});
-    const [username, setusername] = useState('');
-    let socket = useRef(null);
+
+    const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
+    const {isLoggedIn, userSelectedTimes, setUserSelectedTimes, username, connect, disconnect, validateUser, updateUserTimes} = 
+        UserSocket('ws://127.0.0.1:8000/ws/event/' + hash + "/");
 
     const login = async(username, password) => {
         // establish web socket connection
-        const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
-        socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + hash + "/");
-
-        socket.onopen = () => {
-            socket.send(JSON.stringify({
-                action: "login",
-                username: username,
-                password: password
-            }));
-        };
-
-        socket.onmessage = (response) => {
-            const data = JSON.parse(response.data);
-            if (data.type === 'login_success') {
-                console.log('Login success');
-                setIsLoggedIn(true);
-                setUserSelectedTimes(data.times);
-                setusername(username);
-            }
-            else {
-                console.error('Login failed');
-                // TODO: Add more robust messaging
-            }
-        };
+        connect();
+        validateUser(hash, username, password);
 
     };
 
     const logout = () => {
         // logic to end web socket connection, clear ref
-        if (socket.current) {
-            socket.current.close();
-            socket.current = null;
-        }
-        console.log("Logged out");
-        setIsLoggedIn(false);
-        setUserSelectedTimes({});
-        setusername('');
+        disconnect();
     }
 
     return (
@@ -65,10 +37,9 @@ const EventRoom = () => {
                     <div className="min-w-max">
                         <TimeSlots
                             isLoggedIn={isLoggedIn}
-                            socket={socket}
-                            username={username}
                             userSelectedTimes={userSelectedTimes}
                             setUserSelectedTimes={setUserSelectedTimes}
+                            updateUserSelectedTimes={updateUserTimes}
                         />
                     </div>
                 </div>

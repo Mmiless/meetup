@@ -10,7 +10,7 @@ const UserSocket = (url) => {
     const connect = async () => {
         socket.current = new WebSocket(url);
 
-        socket.onmessage = (response) => {
+        socket.current.onmessage = (response) => {
             const data = response.data;
             const type = data.type;
             if (type === "login_success"){
@@ -26,12 +26,22 @@ const UserSocket = (url) => {
 
     }
 
-    const login = async (hash, username, password) => {
+    const validateUser = async (username, password) => {
         if (socket.current){
-            socket.send(JSON.stringify({
+            socket.current.send(JSON.stringify({
                 action: "login",
                 username: username,
                 password: password
+            }));
+        }
+    }
+
+    const updateUserTimes = async () => {
+        if (socket.current){
+            socket.current.send(JSON.stringify({
+                action: "update_times",
+                username: username,
+                times: userSelectedTimes
             }));
         }
     }
@@ -49,7 +59,7 @@ const UserSocket = (url) => {
         }
     }, []);
 
-
+    return {isLoggedIn, userSelectedTimes, username, connect, disconnect, validateUser, updateUserTimes};
 
 }
 
