@@ -1,3 +1,3 @@
 # Meetup
 
-Real-time meeting scheduler.
+TODO: Add dependencies and build process
