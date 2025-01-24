@@ -4,26 +4,34 @@ const UserSocket = (url) => {
     const socket = useRef(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: Replace with EventRoom versions
     const [userSelectedTimes, setUserSelectedTimes] = useState({});
-    const [username, setusername] = useState('');
+    const [username, setUsername] = useState("");
     
     // on mount 
     const connect = async () => {
-        socket.current = new WebSocket(url);
+        return new Promise((resolve, reject) => {
+            socket.current = new WebSocket(url);
 
-        socket.current.onmessage = (response) => {
-            const data = response.data;
-            const type = data.type;
-            if (type === "login_success"){
-                setIsLoggedIn(true);
-                setUserSelectedTimes(data.times);
-                setusername(username);
-                
+            socket.current.onopen = () => {
+                resolve();
             }
-            else if (type == "login_failed"){
-                // TODO: Robust fail state
-            }
-        }
 
+            socket.current.onerror = () => {
+                reject();
+            }
+
+            socket.current.onmessage = (response) => {
+                const data = JSON.parse(response.data);
+                if (data.type === "login_success"){
+                    setIsLoggedIn(true);
+                    setUserSelectedTimes(data.times);
+                    setUsername(data.username);
+                    
+                }
+                else if (data.type === "login_failed"){
+                    // TODO: Robust fail state
+                }
+            }
+        });
     }
 
     const validateUser = async (username, password) => {
@@ -47,9 +55,14 @@ const UserSocket = (url) => {
     }
 
     const disconnect = async () => {
-        if (socket.current) {
-            socket.current.close();
-        }
+        return new Promise(() => {
+            if (socket.current) {
+                socket.current.close();
+                setIsLoggedIn(false);
+                setUserSelectedTimes({});
+                setUsername("");
+            }
+        });
     }
 
     // unmount clenup
@@ -59,7 +72,8 @@ const UserSocket = (url) => {
         }
     }, []);
 
-    return {isLoggedIn, userSelectedTimes, username, connect, disconnect, validateUser, updateUserTimes};
+    return {isLoggedIn, userSelectedTimes, setUserSelectedTimes, username,
+        connect, disconnect, validateUser, updateUserTimes};
 
 }
 

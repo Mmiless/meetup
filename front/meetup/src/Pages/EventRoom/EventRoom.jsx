@@ -14,14 +14,14 @@ const EventRoom = () => {
 
     const login = async(username, password) => {
         // establish web socket connection
-        connect();
-        validateUser(hash, username, password);
+        await connect();
+        validateUser(username, password);
 
     };
 
-    const logout = () => {
+    const logout = async() => {
         // logic to end web socket connection, clear ref
-        disconnect();
+        await disconnect();
     }
 
     return (

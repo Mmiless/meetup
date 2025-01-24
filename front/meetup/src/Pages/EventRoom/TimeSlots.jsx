@@ -19,12 +19,14 @@ const TimeSlots = ({isLoggedIn, userSelectedTimes, setUserSelectedTimes, updateU
     };
 
     useEffect(() => {
+        if (!isLoggedIn) return;
+        
         const serverUpdate = setTimeout(async () => {
                 updateUserSelectedTimes()
             }, 1000);
 
         return () =>  clearTimeout(serverUpdate);
-    }, [userSelectedTimes]);
+    }, [userSelectedTimes, isLoggedIn]);
 
     const handleTimeClick = (day, time) => {
         if(!isLoggedIn) return;

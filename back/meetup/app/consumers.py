@@ -64,6 +64,7 @@ class EventUserConsumer(AsyncWebsocketConsumer):
         }))
 
     async def login(self, data):
+        hash = data['hash']
         username = data['username']
         password = data['password']
         user = await validate_user(self.event_hash, username, password)
@@ -71,7 +72,7 @@ class EventUserConsumer(AsyncWebsocketConsumer):
         if user:
             await self.send(text_data=json.dumps({
                 'type': 'login_success',
-                'user': username,
+                'username': username,
                 "times": user['times']
                 }))
         else:
