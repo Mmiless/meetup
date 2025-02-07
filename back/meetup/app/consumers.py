@@ -48,9 +48,8 @@ class EventUserConsumer(AsyncWebsocketConsumer):
 
     async def get_event(self, data):
         from .event import Event, EventSerializer
-        event_hash = data['hash']
         try:
-            event = await sync_to_async(Event.objects.get)(hash=event_hash)
+            event = await sync_to_async(Event.objects.get)(hash=self.event_hash)
         except Event.DoesNotExist:
             await self.send(text_data=json.dumps({
                 'type': 'event_not_found'
@@ -64,7 +63,6 @@ class EventUserConsumer(AsyncWebsocketConsumer):
         }))
 
     async def login(self, data):
-        hash = data['hash']
         username = data['username']
         password = data['password']
         user = await validate_user(self.event_hash, username, password)
@@ -83,10 +81,9 @@ class EventUserConsumer(AsyncWebsocketConsumer):
 
     async def update_times(self, data):
         from .event import Event
-        event_hash = data['hash']
         username = data['username']
         times = data['times']
-        event = await sync_to_async(Event.objects.get)(hash=event_hash)
+        event = await sync_to_async(Event.objects.get)(hash=self.event_hash)
         participants = event.participants or {}
         participants[username]['times'] = times
         event.participants = json.dumps(participants)

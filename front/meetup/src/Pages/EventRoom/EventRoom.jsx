@@ -9,7 +9,8 @@ import TimeSlots from './TimeSlots';
 const EventRoom = () => {
 
     const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
-    const {isLoggedIn, userSelectedTimes, setUserSelectedTimes, username, connect, disconnect, validateUser, updateUserTimes} = 
+    const {isLoggedIn, userSelectedTimes, setUserSelectedTimes, 
+        username, connect, disconnect, validateUser, updateUserTimes} = 
         UserSocket('ws://127.0.0.1:8000/ws/event/' + hash + "/");
 
     const login = async(username, password) => {
