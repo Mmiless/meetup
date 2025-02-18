@@ -24,6 +24,7 @@ const UserSocket = (url) => {
                 if (data.type === "login_success"){
                     setIsLoggedIn(true);
                     setUserSelectedTimes(data.times);
+                    console.log(data.times);
                     setUsername(data.username);
                     
                 }

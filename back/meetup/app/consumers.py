@@ -107,7 +107,7 @@ class EventUserConsumer(AsyncWebsocketConsumer):
             'type': 'times_updated',
         }))
 
-        updated_times = await get_all_times(participants)
+        updated_times = get_all_times(participants)
         await self.channel_layer.group_send(self.event_hash, 
             {
             'type': 'broadcast',
