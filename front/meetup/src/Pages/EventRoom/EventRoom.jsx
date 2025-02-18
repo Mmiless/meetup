@@ -18,7 +18,7 @@ const EventRoom = () => {
         await connect();
         validateUser(username, password);
 
-    };
+    }
 
     const logout = async() => {
         // logic to end web socket connection, clear ref

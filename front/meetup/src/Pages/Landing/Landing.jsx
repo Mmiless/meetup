@@ -39,7 +39,12 @@ const Landing = () => {
 
         const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventPayload.hash + "/");
         socket.onopen = () => {
-            socket.send(JSON.stringify(eventPayload));
+            if(formattedDates.length === 0) {
+                console.log("Must choose at least one day.");
+            }
+            else{
+                socket.send(JSON.stringify(eventPayload));
+            }
         }
         socket.onmessage = (response) => {
             const data = JSON.parse(response.data);

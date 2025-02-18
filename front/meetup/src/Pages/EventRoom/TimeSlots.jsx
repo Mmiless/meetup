@@ -22,7 +22,7 @@ const TimeSlots = ({isLoggedIn, userSelectedTimes, setUserSelectedTimes, updateU
         if (!isLoggedIn) return;
         
         const serverUpdate = setTimeout(async () => {
-                updateUserSelectedTimes()
+                updateUserSelectedTimes();
             }, 1000);
 
         return () =>  clearTimeout(serverUpdate);

@@ -29,3 +29,7 @@ def validate_user(event_hash, username, password):
         event.participants = json.dumps(participants)
         event.save()
         return participants[username]
+    
+async def get_all_times(participants):
+        times = [participant.get('times') for participant in participants.values()]
+        return json.dumps(times)

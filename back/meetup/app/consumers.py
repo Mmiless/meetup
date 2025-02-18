@@ -48,8 +48,9 @@ class EventUserConsumer(AsyncWebsocketConsumer):
 
     async def get_event(self, data):
         from .event import Event, EventSerializer
+        event_hash = data['hash']
         try:
-            event = await sync_to_async(Event.objects.get)(hash=self.event_hash)
+            event = await sync_to_async(Event.objects.get)(hash=event_hash)
         except Event.DoesNotExist:
             await self.send(text_data=json.dumps({
                 'type': 'event_not_found'
@@ -71,13 +72,27 @@ class EventUserConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'login_success',
                 'username': username,
-                "times": user['times']
+                'times': user['times']
                 }))
         else:
             await self.send(text_data=json.dumps({
                 'type': 'login_failed',
                 'error': 'Invalid login credentials'
             }))
+
+    async def get_all_times(self):
+        from .event import Event
+        event = await sync_to_async(Event.objects.get)(hash=self.event_hash)
+        participants = event.participants or {}
+        payload = []
+        for p in participants:
+            payload.append(participants[p]['times'])
+        payload = json.dump(payload)
+
+        await self.send(text_data=json.dumps({
+            'type': 'all_times',
+            'times': payload
+        }))
 
     async def update_times(self, data):
         from .event import Event
@@ -92,4 +107,16 @@ class EventUserConsumer(AsyncWebsocketConsumer):
             'type': 'times_updated',
         }))
 
+        updated_times = await get_all_times(participants)
+        await self.channel_layer.group_send(self.event_hash, 
+            {
+            'type': 'broadcast',
+            'times': updated_times
+            }
+        )
     
+    async def broadcast(self, updated_times):
+        await self.send(text_data=json.dumps({
+            'type': 'all_times',
+            'times': updated_times,
+        }))

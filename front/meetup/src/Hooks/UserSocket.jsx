@@ -30,6 +30,14 @@ const UserSocket = (url) => {
                 else if (data.type === "login_failed"){
                     // TODO: Robust fail state
                 }
+                else if (data.type == "times_updated"){
+                    // TODO: 
+                    console.log("Time updated");
+                }
+                else if (data.type == "all_times"){
+                    console.log(data.times);
+
+                }
             }
         });
     }
