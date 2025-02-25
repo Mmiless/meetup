@@ -61,16 +61,18 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
     }
 
     const getCellColor = (count) => {
-        if (!count || count === 0) return "bg-gray-200"; // empty cell (no attendants)
-        if (count === 1) return "bg-green-200";
-        if (count === 2) return "bg-green-400";
-        if (count === 3) return "bg-green-600";
+        const participants = Object.keys(allTimesFormatted).length;
+        console.log(count, participants);
+        if (!count || (count / participants === 0)) return "bg-gray-200"; // empty cell (no attendants)
+        else if ((count / participants) <=  0.25) return "bg-green-200";
+        else if ((count / participants) <=  0.5) return "bg-green-400";
+        else if ((count / participants) <=  0.75) return "bg-green-600";
         return "bg-green-800";
       };
     
     return (
         <div className="flex flex-col space-y-2">
-            <div className="select-none flex flex-col space-y-1">
+            <div className="select-none flex flex-col space-y-1 border border-gray-300 p-4 max-w-[1000px] overflow-x-scroll">
                 <div className="flex flex-row gap-x-1">
                     <div className="w-20"></div>
                     {dates.map((day, dayIdx) => (
@@ -107,8 +109,7 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
                 })}
             </div>
 
-            <div>
-                <h3 className="text-center font-bold mb-2">All Available Times</h3>
+            <div className="border border-gray-300 p-4 max-w-[1000px] overflow-x-scroll">
                 <div className="select-none flex flex-col space-y-1">
                 <div className="flex flex-row gap-x-1">
                     <div className="w-20"></div>
@@ -126,21 +127,21 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
                     return (
                     <div key={hourIdx} className="flex flex-row gap-x-1">
                         <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2 whitespace-nowrap mr-2">
-                        {formatTime(hour)}
+                            {formatTime(hour)}
                         </div>
-                        {dates.map((day, dayIdx) => {
-                        const count =
-                            allTimesFormatted[day] && allTimesFormatted[day][hour]
-                            ? allTimesFormatted[day][hour]
-                            : 0;
-                        return (
-                            <div
-                            key={dayIdx}
-                            className={`w-20 h-11 border ${getCellColor(count)}`}
-                            />
-                        );
-                        })}
-                    </div>
+                            {dates.map((day, dayIdx) => {
+                            const count =
+                                allTimesFormatted[day] && allTimesFormatted[day][hour]
+                                ? allTimesFormatted[day][hour]
+                                : 0;
+                            return (
+                                <div
+                                key={dayIdx}
+                                className={`w-20 h-11 border ${getCellColor(count)}`}
+                                />
+                            );
+                            })}
+                        </div>
                     );
                 })}
                 </div>
