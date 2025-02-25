@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 
-const TimeSlots = ({isLoggedIn, userSelectedTimes, setUserSelectedTimes, updateUserSelectedTimes}) => {
+const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTimes, updateUserSelectedTimes}) => {
 
     const eventDetails = JSON.parse(localStorage.getItem('eventDetails'));
     const startTime = eventDetails.start_time;
@@ -42,43 +42,113 @@ const TimeSlots = ({isLoggedIn, userSelectedTimes, setUserSelectedTimes, updateU
             return newState;
         });
     };
+
+    const allTimesFormatted = {};
+    if (allTimes && Array.isArray(allTimes)) {
+      allTimes.forEach((entry) => {
+        Object.entries(entry).forEach(([dateKey, times]) => {
+          if (!allTimesFormatted[dateKey]) {
+            allTimesFormatted[dateKey] = {};
+          }
+          Object.entries(times).forEach(([hour, available]) => {
+            if (available) {
+              allTimesFormatted[dateKey][hour] =
+                (allTimesFormatted[dateKey][hour] || 0) + 1;
+            }
+          });
+        });
+      });
+    }
+
+    const getCellColor = (count) => {
+        if (!count || count === 0) return "bg-gray-200"; // empty cell (no attendants)
+        if (count === 1) return "bg-green-200";
+        if (count === 2) return "bg-green-400";
+        if (count === 3) return "bg-green-600";
+        return "bg-green-800";
+      };
     
     return (
-        <div className="select-none flex flex-col space-y-1">
-            <div className="flex flex-row gap-x-1">
-                <div className="w-20"></div>
-                {dates.map((day, dayIdx) => (
-                    <div key={dayIdx} className="w-20 text-center font-source-code font-bold">
+        <div className="flex flex-col space-y-2">
+            <div className="select-none flex flex-col space-y-1">
+                <div className="flex flex-row gap-x-1">
+                    <div className="w-20"></div>
+                    {dates.map((day, dayIdx) => (
+                        <div key={dayIdx} className="w-20 text-center font-source-code font-bold">
+                            {formatDate(day)}
+                        </div>
+                    ))}
+                </div>
+        
+                {Array.from({ length: endTime - startTime }).map((_, hourIdx) => {
+                    const hour = startTime + hourIdx;
+                    console.log(allTimes);
+                    return (
+                        <div key={hourIdx} className="flex flex-row gap-x-1">
+                            <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2 whitespace-nowrap mr-2">{formatTime(hour)}</div>
+                            {dates.map((day, dayIdx) => {
+                                const isSelected = userSelectedTimes[day]?.[hour];
+                                return (
+                                    <div
+                                        key={dayIdx}
+                                        className={`w-20 h-11 border cursor-pointer ${
+                                            !isLoggedIn ? "bg-zinc-400" :
+                                            isSelected ? "bg-green-500" : "bg-gray-200"
+                                        }`}
+                                        onMouseDown={() => handleTimeClick(day, hour)}
+                                        onMouseOver={(e) => {
+                                            if (e.buttons === 1) handleTimeClick(day, hour); // Select while dragging
+                                        }}
+                                    />
+                                );
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
+
+            <div>
+                <h3 className="text-center font-bold mb-2">All Available Times</h3>
+                <div className="select-none flex flex-col space-y-1">
+                <div className="flex flex-row gap-x-1">
+                    <div className="w-20"></div>
+                    {dates.map((day, dayIdx) => (
+                    <div
+                        key={dayIdx}
+                        className="w-20 text-center font-source-code font-bold"
+                    >
                         {formatDate(day)}
                     </div>
-                ))}
-            </div>
-    
-            {Array.from({ length: endTime - startTime }).map((_, hourIdx) => {
-                const hour = startTime + hourIdx;
-                return (
+                    ))}
+                </div>
+                {Array.from({ length: endTime - startTime }).map((_, hourIdx) => {
+                    const hour = startTime + hourIdx;
+                    return (
                     <div key={hourIdx} className="flex flex-row gap-x-1">
-                        <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2 whitespace-nowrap mr-2">{formatTime(hour)}</div>
+                        <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2 whitespace-nowrap mr-2">
+                        {formatTime(hour)}
+                        </div>
                         {dates.map((day, dayIdx) => {
-                            const isSelected = userSelectedTimes[day]?.[hour];
-                            return (
-                                <div
-                                    key={dayIdx}
-                                    className={`w-20 h-11 border cursor-pointer ${
-                                        !isLoggedIn ? "bg-zinc-400" :
-                                        isSelected ? "bg-green-500" : "bg-gray-200"
-                                    }`}
-                                    onMouseDown={() => handleTimeClick(day, hour)}
-                                    onMouseOver={(e) => {
-                                        if (e.buttons === 1) handleTimeClick(day, hour); // Select while dragging
-                                    }}
-                                />
-                            );
+                        const count =
+                            allTimesFormatted[day] && allTimesFormatted[day][hour]
+                            ? allTimesFormatted[day][hour]
+                            : 0;
+                        return (
+                            <div
+                            key={dayIdx}
+                            className={`w-20 h-11 border ${getCellColor(count)}`}
+                            />
+                        );
                         })}
                     </div>
-                );
-            })}
+                    );
+                })}
+                </div>
+            </div>
+
         </div>
+
+        
     );
 };
 

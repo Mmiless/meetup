@@ -5,6 +5,7 @@ const UserSocket = (url) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: Replace with EventRoom versions
     const [userSelectedTimes, setUserSelectedTimes] = useState({});
     const [username, setUsername] = useState("");
+    const [allTimes, setAllTimes] = useState({});
     
     // on mount 
     const connect = async () => {
@@ -32,12 +33,12 @@ const UserSocket = (url) => {
                     // TODO: Robust fail state
                 }
                 else if (data.type == "times_updated"){
-                    // TODO: 
+                    // TODO: idk
                     console.log("Time updated");
                 }
                 else if (data.type == "all_times"){
                     console.log(data.times);
-
+                    setAllTimes(data.times);
                 }
             }
         });
@@ -82,7 +83,7 @@ const UserSocket = (url) => {
     }, []);
 
     return {isLoggedIn, userSelectedTimes, setUserSelectedTimes, username,
-        connect, disconnect, validateUser, updateUserTimes};
+        connect, disconnect, validateUser, updateUserTimes, allTimes};
 
 }
 

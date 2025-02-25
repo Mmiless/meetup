@@ -115,8 +115,8 @@ class EventUserConsumer(AsyncWebsocketConsumer):
             }
         )
     
-    async def broadcast(self, updated_times):
+    async def broadcast(self, message):
         await self.send(text_data=json.dumps({
             'type': 'all_times',
-            'times': updated_times,
+            'times': message['times']
         }))

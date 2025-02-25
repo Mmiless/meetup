@@ -10,7 +10,7 @@ const EventRoom = () => {
 
     const hash = JSON.parse(localStorage.getItem('eventDetails')).hash;
     const {isLoggedIn, userSelectedTimes, setUserSelectedTimes, 
-        username, connect, disconnect, validateUser, updateUserTimes} = 
+        username, connect, disconnect, validateUser, updateUserTimes, allTimes} = 
         UserSocket('ws://127.0.0.1:8000/ws/event/' + hash + "/");
 
     const login = async(username, password) => {
@@ -38,6 +38,7 @@ const EventRoom = () => {
                     <div className="min-w-max">
                         <TimeSlots
                             isLoggedIn={isLoggedIn}
+                            allTimes={allTimes}
                             userSelectedTimes={userSelectedTimes}
                             setUserSelectedTimes={setUserSelectedTimes}
                             updateUserSelectedTimes={updateUserTimes}
