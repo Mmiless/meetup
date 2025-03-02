@@ -30,7 +30,7 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
 
     const handleTimeClick = (day, time) => {
         if(!isLoggedIn) return;
-        setUserSelectedTimes((prevState) =>{
+        setUserSelectedTimes((prevState) => {
             const daySlots = prevState[day] || {};
             const newState = {
                 ...prevState,
@@ -61,8 +61,7 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
     }
 
     const getCellColor = (count) => {
-        const participants = Object.keys(allTimesFormatted).length;
-        console.log(count, participants);
+        const participants = Object.keys(allTimes).length;
         if (!count || (count / participants === 0)) return "bg-gray-200"; // empty cell (no attendants)
         else if ((count / participants) <=  0.25) return "bg-green-200";
         else if ((count / participants) <=  0.5) return "bg-green-400";
@@ -84,7 +83,6 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
         
                 {Array.from({ length: endTime - startTime }).map((_, hourIdx) => {
                     const hour = startTime + hourIdx;
-                    console.log(allTimes);
                     return (
                         <div key={hourIdx} className="flex flex-row gap-x-1">
                             <div className="w-20 h-11 flex items-center justify-center font-source-code font-bold px-2 whitespace-nowrap mr-2">{formatTime(hour)}</div>
@@ -137,7 +135,7 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
                             return (
                                 <div
                                 key={dayIdx}
-                                className={`w-20 h-11 border ${getCellColor(count)}`}
+                                className={`w-20 h-11 border ${!isLoggedIn ? "bg-zinc-400" : getCellColor(count)}`}
                                 />
                             );
                             })}

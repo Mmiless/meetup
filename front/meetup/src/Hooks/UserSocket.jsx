@@ -25,7 +25,6 @@ const UserSocket = (url) => {
                 if (data.type === "login_success"){
                     setIsLoggedIn(true);
                     setUserSelectedTimes(data.times);
-                    console.log(data.times);
                     setUsername(data.username);
                     
                 }
@@ -37,7 +36,6 @@ const UserSocket = (url) => {
                     console.log("Time updated");
                 }
                 else if (data.type == "all_times"){
-                    console.log(data.times);
                     setAllTimes(data.times);
                 }
             }

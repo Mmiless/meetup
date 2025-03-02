@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 import json
-from .util import *
+from .validation import *
 
 class EventUserConsumer(AsyncWebsocketConsumer):
     async def connect(self):
