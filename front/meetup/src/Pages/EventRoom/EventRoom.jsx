@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchEventByHash } from '../../utils/eventUtils';
 
 import Header from '../../components/Header';
+import CopyButton from '../../components/CopyButton';
 import UserSocket from '../../hooks/UserSocket';
 import Login from './Login';
 import Logout from './Logout';
@@ -68,12 +69,23 @@ const EventRoom = () => {
         );
     }
 
-    // Display event
     return (
-        <div className='flex flex-col items-center space-y-8 pb-8'>
+        <div className='flex flex-col items-center space-y-8 pb-8 font-source-code'>
             <Header />
             <div className="text-xl font-bold">{eventDetails.name}</div>
             <div className="text-sm text-gray-500">Event ID: {eventHash}</div>
+
+            <div className="flex items-center space-x-2">
+                <CopyButton 
+                    textToCopy={eventHash} 
+                    label="Copy Event ID" 
+                />
+                <CopyButton 
+                    textToCopy={'localhost:3000/event/' + eventHash + '/'} // replace with production URL stored as state
+                    label="Copy Invite URL" 
+                    className="ml-2"
+                />
+            </div>
             
             <div className='flex items-start flex-row space-x-4'> 
                 <div className="border border-gray-300 p-4">
