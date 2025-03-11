@@ -1,6 +1,6 @@
+from asgiref.sync import sync_to_async
 import bcrypt as bc
 import json
-from asgiref.sync import sync_to_async
 
 def new_password(password):
     bytes = password.encode('utf-8')
@@ -29,6 +29,13 @@ def validate_user(event_hash, username, password):
         event.participants = json.dumps(participants)
         event.save()
         return participants[username]
-    
-def get_all_times(participants):
-        return [participant.get('times', {}) for participant in participants.values()]
+
+@sync_to_async
+def get_all_times(event_hash):
+    from .event import Event
+    event = Event.objects.get(hash=event_hash)
+    participants = event.participants or {}
+    payload = []
+    for p in participants:
+        payload.append(participants[p]['times'])
+    return payload

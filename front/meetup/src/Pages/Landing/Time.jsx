@@ -20,10 +20,10 @@ const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
         setEndTime(selection);
     }
 
-    const formatTime = (hour) => {
-        const period = hour < 12 ? "AM" : "PM";
-        const hourTwelve = hour % 12 === 0 ? 12 : hour % 12; 
-        return `${hourTwelve}:00 ${period}`;
+    const formatTime = (time) => {
+        const period = time < 12 ? "AM" : "PM";
+        const timeTwelve = time % 12 === 0 ? 12 : time % 12; 
+        return `${timeTwelve}:00 ${period}`;
     };
 
     return (
@@ -36,16 +36,16 @@ const Time = ({startTime, setStartTime, endTime, setEndTime}) => {
                 </div>
                 <div className="flex flex-col space-y-4">
                     <select className="border border-gray-300 rounded-lg p-1" id="start" onChange={handleStartChange}>
-                        {times.map((hour) => (
-                            <option key={hour} value={hour}>
-                                {formatTime(hour)}
+                        {times.map((time) => (
+                            <option key={time} value={time}>
+                                {formatTime(time)}
                             </option>
                         ))}
                     </select>
                     <select className="border border-gray-300 rounded-lg p-1" id="end" onChange={handleEndChange}>
-                        {times.filter((hour) => hour > startTimeIndex).map((hour) => (
-                                <option key={hour} value={hour}>
-                                    {formatTime(hour)}
+                        {times.filter((time) => time > startTimeIndex).map((time) => (
+                                <option key={time} value={time}>
+                                    {formatTime(time)}
                                 </option>
                             ))}
                     </select>

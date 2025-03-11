@@ -7,7 +7,7 @@ import { getDateFromIndices } from "../../util";
 import Header from "../../Hooks/Header";
 import Calender from "./Calender";
 import Time from "./Time";
-import Submission from "./Submission";
+import CreateEvent from "./CreateEvent";
 import GetEvent from "./GetEvent";
 
 const Landing = () => {
@@ -106,7 +106,7 @@ const Landing = () => {
                         setStartTime={setStartTime} 
                         endTime={endTime}
                         setEndTime={setEndTime} />
-                    <Submission onSubmit={createEvent} />
+                    <CreateEvent onSubmit={createEvent} />
                 </div>
             </div>
             
