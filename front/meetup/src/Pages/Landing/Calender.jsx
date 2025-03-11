@@ -1,5 +1,5 @@
 import React from "react";
-import { fillMatrix } from "../../util";
+import { fillMatrix } from "../../utils/dateUtils";
 
 const Calender = ({selectedDates, setSelectedDates}) => {
 

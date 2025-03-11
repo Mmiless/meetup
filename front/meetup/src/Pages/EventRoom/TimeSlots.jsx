@@ -1,27 +1,17 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
+import { 
+  formatTime, 
+  formatDate, 
+  generateTimeIntervals, 
+  getCellColor, 
+  processAllTimes 
+} from "../../utils/timeUtils";
 
 const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTimes, updateUserSelectedTimes}) => {
-
     const eventDetails = JSON.parse(localStorage.getItem('eventDetails'));
     const startTime = eventDetails.start_time;
     const endTime = eventDetails.end_time;
     const dates = eventDetails.dates;
-
-    // Format time to show hours and minutes
-    const formatTime = (timeValue) => {
-        const hour = Math.floor(timeValue);
-        const minutes = Math.round((timeValue - hour) * 60);
-        
-        const period = hour < 12 ? "AM" : "PM";
-        const hourTwelve = hour % 12 === 0 ? 12 : hour % 12;
-        
-        return `${hourTwelve}:${minutes.toString().padStart(2, '0')} ${period}`;
-    };
-
-    const formatDate = (day) => {
-        const ymd = day.split('-');
-        return ymd[1] + "/" + ymd[2];
-    };
 
     useEffect(() => {
         if (!isLoggedIn) return;
@@ -30,8 +20,8 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
                 updateUserSelectedTimes();
             }, 1000);
 
-        return () =>  clearTimeout(serverUpdate);
-    }, [userSelectedTimes, isLoggedIn]);
+        return () => clearTimeout(serverUpdate);
+    }, [userSelectedTimes, isLoggedIn, updateUserSelectedTimes]);
 
     // Handle time click with support for 15-minute intervals
     const handleTimeClick = (day, time) => {
@@ -49,56 +39,11 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
         });
     };
 
-    // Process all times with 15-minute intervals
-    const allTimesFormatted = {};
-    if (allTimes && Array.isArray(allTimes) && allTimes.length > 0) {
-        console.log("Processing allTimes:", allTimes);
-        
-        allTimes.forEach((userTimes) => {
-          // Process each date for this user
-          Object.entries(userTimes).forEach(([dateKey, timeSlots]) => {
-            if (!allTimesFormatted[dateKey]) {
-              allTimesFormatted[dateKey] = {};
-            }
-            Object.entries(timeSlots).forEach(([timeSlot, isAvailable]) => {
-              if (isAvailable) {
-                const timeNum = parseFloat(timeSlot);
-                
-                if (!allTimesFormatted[dateKey][timeNum]) {
-                  allTimesFormatted[dateKey][timeNum] = 0;
-                }
-                allTimesFormatted[dateKey][timeNum] += 1;
-              }
-            });
-          });
-        });
-      }
-
-    const getCellColor = (count) => {
-        const participants = allTimes.length;
-        console.log(participants);
-        console.log(allTimes);
-        if (!count || (count / participants === 0)) return "bg-gray-200"; // empty cell (no attendants)
-        else if ((count / participants) <=  0.25) return "bg-green-200";
-        else if ((count / participants) <=  0.5) return "bg-green-400";
-        else if ((count / participants) <=  0.75) return "bg-green-600";
-        return "bg-green-800";
-    };
+    // Process time data using utility function
+    const allTimesFormatted = processAllTimes(allTimes);
     
-    // Generate time intervals - 4 slots per hour (15 min each)
-    const generateTimeIntervals = () => {
-        const intervals = [];
-        for (let hour = startTime; hour < endTime; hour++) {
-            intervals.push(hour);
-            intervals.push(hour + 0.25);
-            intervals.push(hour + 0.5);
-            intervals.push(hour + 0.75);
-        }
-        intervals.push(endTime);
-        return intervals;
-    };
-
-    const timeIntervals = generateTimeIntervals();
+    // Generate time intervals using utility function
+    const timeIntervals = generateTimeIntervals(startTime, endTime);
     
     return (
         <div className="flex flex-col space-y-2">
@@ -166,7 +111,7 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
                                 return (
                                     <div
                                     key={dayIdx}
-                                    className={`w-20 h-8 border ${!isLoggedIn ? "bg-zinc-400" : getCellColor(count)}`}
+                                    className={`w-20 h-8 border ${!isLoggedIn ? "bg-zinc-400" : getCellColor(count, allTimes.length)}`}
                                     />
                                 );
                             })}

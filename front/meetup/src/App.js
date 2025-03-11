@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
-import Landing from './Pages/Landing/Landing'
-import EventRoom from './Pages/EventRoom/EventRoom'
+import Landing from './pages/Landing/Landing'
+import EventRoom from './pages/EventRoom/EventRoom'
 
 function App() {
   return (

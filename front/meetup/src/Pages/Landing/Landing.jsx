@@ -2,9 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { getDateFromIndices, fetchEventByHash } from "../../util";
+import { getDateFromIndices } from "../../utils/dateUtils";
+import { fetchEventByHash } from "../../utils/eventUtils";
 
-import Header from "../../Hooks/Header";
+import Header from "../../components/Header";
 import Calender from "./Calender";
 import Time from "./Time";
 import CreateEvent from "./CreateEvent";

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchEventByHash } from '../../util';
+import { fetchEventByHash } from '../../utils/eventUtils';
 
-import Header from '../../Hooks/Header';
-import UserSocket from '../../Hooks/UserSocket';
+import Header from '../../components/Header';
+import UserSocket from '../../hooks/UserSocket';
 import Login from './Login';
 import Logout from './Logout';
 import TimeSlots from './TimeSlots';
@@ -36,7 +36,7 @@ const EventRoom = () => {
         };
         
         getEventDetails();
-    }, [eventHash]);
+    }, [eventHash, navigate]);
 
     const {
         isLoggedIn, 
