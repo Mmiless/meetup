@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { getDateFromIndices } from "../../util"; // Keep this original import
+import { getDateFromIndices, fetchEventByHash } from "../../util";
 
 import Header from "../../Hooks/Header";
 import Calender from "./Calender";
@@ -61,27 +61,12 @@ const Landing = () => {
         }
     };
 
-    const getEvent = async (eventHash) => {
-        const eventPayload = {
-            action: "get_event",
-            hash: eventHash,
-        };
-
-        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventHash + "/");
-        socket.onopen = () => {
-            socket.send(JSON.stringify(eventPayload));
-        }
-        socket.onmessage = (response) => {
-            const data = JSON.parse(response.data);
-            if (data.type === 'event_found') {
-                const event = data.event;
-                localStorage.setItem('eventDetails', JSON.stringify(event));
-                navigate(`/event/${eventHash}`);
-            }
-            else {
-                console.error('Failed to find event');
-            }
-            socket.close();
+    const getEvent = async (hash) => {
+        try {
+            await fetchEventByHash(hash);
+            navigate(`/event/${hash}`);
+        } catch (error) {
+            console.error("Failed to find event:", error);
         }
     };
 

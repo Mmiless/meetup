@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { fetchEventByHash } from '../../util';
 
 import Header from '../../Hooks/Header';
 import UserSocket from '../../Hooks/UserSocket';
@@ -10,58 +11,33 @@ import TimeSlots from './TimeSlots';
 const EventRoom = () => {
     const { eventHash } = useParams();
     const navigate = useNavigate();
+    const [eventDetails, setEventDetails] = useState(null);
 
+    // Fetch event details on mount
     useEffect(() => {
-        const storedDetails = localStorage.getItem('eventDetails');
-        
-        if (!storedDetails) {
-            console.error("No event details found");
-            navigate('/');
-            return;
-        }
-        
-        try {
-            const parsedDetails = JSON.parse(storedDetails);
-            if (parsedDetails.hash !== eventHash) {
-                // Try to fetch the event with the current hash
-                const socket = new WebSocket(`ws://127.0.0.1:8000/ws/event/${eventHash}/`);
-                
-                socket.onopen = () => {
-                    socket.send(JSON.stringify({
-                        action: "get_event",
-                        hash: eventHash
-                    }));
-                };
-                
-                socket.onmessage = (response) => {
-                    const data = JSON.parse(response.data);
-                    if (data.type === 'event_found') {
-                        localStorage.setItem('eventDetails', JSON.stringify(data.event));
-                        // Reload to update the page with new event data
-                        window.location.reload();
-                    } else {
-                        console.error("Event not found");
-                        navigate('/');
+        const getEventDetails = async () => {
+            try {
+                const storedDetails = localStorage.getItem('eventDetails');
+                if (storedDetails) {
+                    const parsedDetails = JSON.parse(storedDetails);
+                    
+                    if (parsedDetails && parsedDetails.hash === eventHash) {
+                        setEventDetails(parsedDetails);
+                        return;
                     }
-                    socket.close();
-                };
+                }
+                const event = await fetchEventByHash(eventHash);
+                setEventDetails(event);
                 
-                socket.onerror = () => {
-                    console.error("Connection error");
-                    navigate('/');
-                    socket.close();
-                };
+            } catch (error) {
+                console.error("Error fetching event:", error);
+                navigate("/")
             }
-        } catch (error) {
-            console.error("Invalid event data");
-            navigate('/');
-        }
-    }, [eventHash, navigate]);
+        };
+        
+        getEventDetails();
+    }, [eventHash]);
 
-    // Get event details from localStorage
-    const eventDetails = JSON.parse(localStorage.getItem('eventDetails') || '{}');
-    
-    // Set up WebSocket connection
     const {
         isLoggedIn, 
         userSelectedTimes, 
@@ -83,10 +59,16 @@ const EventRoom = () => {
         await disconnect();
     };
 
-    if (!eventDetails || !eventDetails.name) {
-        return null; // Will redirect in useEffect
+    if (!eventDetails) {
+        return (
+            <div className='flex flex-col items-center space-y-8 pb-8'>
+                <Header />
+                <div>Loading event...</div>
+            </div>
+        );
     }
 
+    // Display event
     return (
         <div className='flex flex-col items-center space-y-8 pb-8'>
             <Header />
