@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { 
   formatTime, 
   formatDate, 
@@ -23,7 +23,6 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
         return () => clearTimeout(serverUpdate);
     }, [userSelectedTimes, isLoggedIn, updateUserSelectedTimes]);
 
-    // Handle time click with support for 15-minute intervals
     const handleTimeClick = (day, time) => {
         if(!isLoggedIn) return;
         setUserSelectedTimes((prevState) => {
@@ -39,10 +38,20 @@ const TimeSlots = ({isLoggedIn, allTimes, userSelectedTimes, setUserSelectedTime
         });
     };
 
-    // Process time data using utility function
-    const allTimesFormatted = processAllTimes(allTimes);
+    // allow own allTimes table to update immediately upon input
+    const mergedAllTimes = useMemo(() => {
+        if (!isLoggedIn || !allTimes) {
+            return allTimes || [];
+        }
+        const updatedAllTimes = [...(Array.isArray(allTimes) ? allTimes : [])];
+        
+        updatedAllTimes.push(userSelectedTimes);
+        
+        return updatedAllTimes;
+    }, [allTimes, userSelectedTimes, isLoggedIn]);
+
+    const allTimesFormatted = processAllTimes(mergedAllTimes);
     
-    // Generate time intervals using utility function
     const timeIntervals = generateTimeIntervals(startTime, endTime);
     
     return (
