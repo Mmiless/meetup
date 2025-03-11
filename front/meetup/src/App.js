@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import Landing from './Pages/Landing/Landing'
 import EventRoom from './Pages/EventRoom/EventRoom'
 
@@ -8,7 +8,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Landing />} />
-          <Route path='/EventRoom' element={<EventRoom />} />
+          <Route path='/event/:eventHash' element={<EventRoom />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { getDateFromIndices } from "../../util";
+import { getDateFromIndices } from "../../util"; // Keep this original import
 
 import Header from "../../Hooks/Header";
 import Calender from "./Calender";
@@ -11,7 +11,6 @@ import CreateEvent from "./CreateEvent";
 import GetEvent from "./GetEvent";
 
 const Landing = () => {
-
     const navigate = useNavigate();
     const [eventHash, setEventHash] = useState('');
     const [startTime, setStartTime] = useState(0);
@@ -27,9 +26,11 @@ const Landing = () => {
                 }
             });
         });
+        
+        const hash = uuidv4();
         const eventPayload = {
             action: "create_event",
-            hash: uuidv4(),
+            hash: hash,
             name: eventName,
             start_time: startTime,
             end_time: endTime,
@@ -37,7 +38,7 @@ const Landing = () => {
             participants: "{}",
         };
 
-        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventPayload.hash + "/");
+        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + hash + "/");
         socket.onopen = () => {
             if(formattedDates.length === 0) {
                 console.log("Must choose at least one day.");
@@ -51,7 +52,7 @@ const Landing = () => {
             if (data.type === 'event_created') {
                 const event = data.event;
                 localStorage.setItem('eventDetails', JSON.stringify(event));
-                navigate('/EventRoom');
+                navigate(`/event/${hash}`);
             }
             else {
                 console.error('Failed to create event');
@@ -66,7 +67,7 @@ const Landing = () => {
             hash: eventHash,
         };
 
-        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventPayload.hash + "/");
+        const socket = new WebSocket('ws://127.0.0.1:8000/ws/event/' + eventHash + "/");
         socket.onopen = () => {
             socket.send(JSON.stringify(eventPayload));
         }
@@ -75,11 +76,10 @@ const Landing = () => {
             if (data.type === 'event_found') {
                 const event = data.event;
                 localStorage.setItem('eventDetails', JSON.stringify(event));
-                navigate('/EventRoom');
+                navigate(`/event/${eventHash}`);
             }
             else {
                 console.error('Failed to find event');
-                // TODO: Display proper error message
             }
             socket.close();
         }
@@ -109,9 +109,7 @@ const Landing = () => {
                     <CreateEvent onSubmit={createEvent} />
                 </div>
             </div>
-            
         </div>
-            
     );
 };
 
