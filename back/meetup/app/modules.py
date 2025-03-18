@@ -1,5 +1,5 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+from django.db import transaction
 import json
 
 class EventModule:
@@ -52,13 +52,18 @@ class TimeModule:
         
         username = data['username']
         times = data['times']
+
+        @sync_to_async
+        def lock_row_update():
+            with transaction.atomic():
+                event = Event.objects.select_for_update().get(hash=self.event_hash)
+                participants = event.participants or {}
+                participants[username]['times'] = times
+                event.participants = json.dumps(participants)
+                event.save()
         
-        event = await sync_to_async(Event.objects.get)(hash=self.event_hash)
-        participants = event.participants or {}
-        participants[username]['times'] = times
-        event.participants = json.dumps(participants)
-        await sync_to_async(event.save)()
-        
+        await lock_row_update()
+            
         await self.send_response('times_updated')
 
         updated_times = await get_all_times(self.event_hash)
