@@ -31,6 +31,11 @@ To start backend:
     ````redis-server````
 
 
+## Host with Docker
+
+TODO
+
+
 
 
 
