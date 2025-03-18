@@ -11,24 +11,24 @@ To start frontend:
 
 - cd into front/meetup
 
-````npm install````
+    ````npm install````
 
-````npm start````
+    ````npm start````
 
 
 To start backend:
 
 - Create a virtual environment and activate.
 
-````pip3 install -r requirements.txt````
+    ````pip3 install -r requirements.txt````
 
 - Start websocket server
-
-````daphne -b 0.0.0.0 -p 8000 meetup.asgi:application````
+    
+    ````daphne -b 0.0.0.0 -p 8000 meetup.asgi:application````
 
 - Start redis server
 
-````redis-server````
+    ````redis-server````
 
 
 
